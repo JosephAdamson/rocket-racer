@@ -10,10 +10,8 @@ Reset and populate DB
 const populate = async () => {
     try {
         await connectDB(env.MONGO_URI);
-        // clear current db and re-populate
         await Snippet.deleteMany();
 
-        // iterate over data
         for (let artist in songData) {
             const snippets = songData[artist as keyof typeof songData];
             await Snippet.create(snippets);

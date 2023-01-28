@@ -10,7 +10,7 @@ const getSnippetsStatic = async (req: Request, res: Response, next: NextFunction
             data: result
         });
     } catch (error) {
-        console.log(error);
+        next(error);
     }
 }
 
@@ -38,23 +38,50 @@ const getSnippets = async (req: Request, res: Response, next: NextFunction) => {
         let result;
         if (sort && typeof sort === 'string') {
             const sortParams = sort.split(',').join(' ');
-            result = await Snippet.find(query).sort(sortParams);
+            result = await Snippet.find(query).sort(sortParams)
         } else {
-            result = await Snippet.find(query);
+            result = await Snippet.find(query)
+        }
+
+        if (result.length < 1) {
+            throw new Error("Sorry, no result matched your query");
         }
 
         res.status(200).json({
             success: true,
-            data: result
+            data: result,
         })
 
     } catch (error) {
-        console.log(error);
+        next(error);
+    }
+}
+
+
+const getSnippetsRandom = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+
+        const limit = req.query.limit && typeof req.query.limit === 'string'? 
+            parseInt(req.query.limit) : 10
+
+        const result = await Snippet.aggregate([
+            {$sample: {size: limit}},
+        ]);
+
+        res.status(200).json({
+            success: true,
+            data: result,
+            items: limit
+        })
+
+    } catch (error) {
+        next(error);
     }
 }
 
 
 export {
     getSnippetsStatic,
-    getSnippets
+    getSnippets,
+    getSnippetsRandom
 }

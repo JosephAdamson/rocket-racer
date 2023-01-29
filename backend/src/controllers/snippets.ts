@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import Snippet from '../models/snippet';
+import APIError from '../errors/APIError';
 
 
 const getSnippetsStatic = async (req: Request, res: Response, next: NextFunction) => {
@@ -43,8 +44,9 @@ const getSnippets = async (req: Request, res: Response, next: NextFunction) => {
             result = await Snippet.find(query)
         }
 
+        // picked 404 over 204 as the latter returns no response body in express.
         if (result.length < 1) {
-            throw new Error("Sorry, no result matched your query");
+            throw new APIError("Query returned nothing", 404);
         }
 
         res.status(200).json({

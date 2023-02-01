@@ -19,7 +19,6 @@ export default function GameWindow() {
             });
             const content = await response.json();
             setSnippets(content.data);
-            // load snippet
         } catch (error) {
             console.log(error)
         }
@@ -34,16 +33,11 @@ export default function GameWindow() {
 
     useEffect(() => {
         if (snippets && snippets.length > 0) {
-            setDisplaySnippet(snippets[snippets.length -1]);
+            const newDisplaySnippet: Snippet = snippets[snippets.length - 1];
+            setDisplaySnippet(newDisplaySnippet);
+            setTextDisplay(newDisplaySnippet.text);
         }
     }, [snippets]);
-
-
-    useEffect(() => {
-        if (displaySnippet) {
-            setTextDisplay(displaySnippet.text);
-        }
-    }, [displaySnippet])
 
 
     return (

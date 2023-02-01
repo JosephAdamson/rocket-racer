@@ -52,7 +52,7 @@ const getSnippets = async (req: Request, res: Response, next: NextFunction) => {
         res.status(200).json({
             success: true,
             data: result,
-        })
+        });
 
     } catch (error) {
         next(error);
@@ -62,7 +62,6 @@ const getSnippets = async (req: Request, res: Response, next: NextFunction) => {
 
 const getSnippetsRandom = async (req: Request, res: Response, next: NextFunction) => {
     try {
-
         const limit = req.query.limit && typeof req.query.limit === 'string'? 
             parseInt(req.query.limit) : 10
 
@@ -74,7 +73,7 @@ const getSnippetsRandom = async (req: Request, res: Response, next: NextFunction
             success: true,
             data: result,
             items: limit
-        })
+        });
 
     } catch (error) {
         next(error);

@@ -1,9 +1,9 @@
 import React from 'react';
-import GameWindow from './components/GameWindow';
+import ActiveRace from './pages/ActiveRace';
 
 function App() {
   return (
-    <GameWindow/>
+    <ActiveRace/>
   );
 }
 

@@ -20,6 +20,7 @@ interface queryObj {
     artist?: string
     title?: string
     sort?: string
+    id?: string
 }
 
 

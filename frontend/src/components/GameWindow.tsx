@@ -2,6 +2,7 @@ import { useEffect, useState , ChangeEvent, KeyboardEvent} from "react";
 import { BaseURL } from "../shared";
 import { Snippet } from "../types";
 import { v4 as uuidv4 } from 'uuid';
+import Timer from "./Timer";
 
 
 export default function GameWindow() {
@@ -133,7 +134,10 @@ export default function GameWindow() {
 
     return (
         <div className="flex flex-col w-2/3 h-auto border-2 rounded-md p-4">
-            <h2>3...2...1..LIFT OFF! Type the text below:</h2>
+            <div className="flex justify-between">
+                <h2>3...2...1..LIFT OFF! Type the text below:</h2>
+                <Timer timeLimit={120}/>
+            </div>
             <div>
             </div>
             <div className="flex flex-col gap-4 p-4">

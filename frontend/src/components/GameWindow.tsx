@@ -79,7 +79,6 @@ export default function GameWindow() {
         setInputField(actual);
         // console.log(isWordMatch(actual, expected));
         // console.log(`${expected} : ${actual}`);
-
          
         const textDipslayHighlightUpdate = {...textDisplayHighlight}
         if (isWordMatch(actual, expected)) {
@@ -98,11 +97,15 @@ export default function GameWindow() {
 
     const keyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === " " || e.code === "Space") {
-            console.log("Spacebar, hell yeah!");
-            // clear input field
-            setInputField("");
-            // skip space between words
-            setCursor(cursor => cursor + 2);
+            const expected = textDisplay[cursor];
+            const actual = inputField;
+
+            if (isWordMatch(expected, actual)) {
+                // clear input field
+                setInputField("");
+                // skip space between words
+                setCursor(cursor => cursor + 2);
+            }
         }
     }
 

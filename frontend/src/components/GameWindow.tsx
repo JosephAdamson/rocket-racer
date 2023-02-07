@@ -35,7 +35,7 @@ export default function GameWindow() {
 
 
     /*
-    compare to string for a match of partial match.
+    Compare to string for a match of partial match.
 
     @param  {string}    current     user-typed value in the input field
     @param  {string}    actual      word/string in the text (up to the point of the cursor)    
@@ -60,11 +60,11 @@ export default function GameWindow() {
         return wordArr.map((letter, i) => {
             const subLen = textDisplayHighlight[cursor];
             if (cursor >= pos) {
-                if ((textDisplayHighlight[cursor] > 0 && i < subLen) || cursor > pos){
-                    return <span className='text-green-500' key={uuidv4()}>{letter}</span>
-                } else {
-                    return <span className='bg-red-200' key={uuidv4()}>{letter}</span>
-                }
+                return <span className={
+                    (textDisplayHighlight[cursor] > 0 && i < subLen) || cursor > pos ? 
+                    `text-green-500`:
+                    'bg-red-200'
+                } key={uuidv4()}>{letter}</span>
             } else {
                 return <span key={uuidv4()}>{letter}</span>
             }
@@ -84,14 +84,12 @@ export default function GameWindow() {
         if (isWordMatch(actual, expected)) {
             const subLen = actual.length;
             textDipslayHighlightUpdate[cursor] = subLen;
-            setTextDisplayHighlight(textDipslayHighlightUpdate);
         } else if (!actual) {
             textDipslayHighlightUpdate[cursor] = 0;
-            setTextDisplayHighlight(textDipslayHighlightUpdate);
         } else {
             textDipslayHighlightUpdate[cursor] = -1;
-            setTextDisplayHighlight(textDipslayHighlightUpdate);
         }
+        setTextDisplayHighlight(textDipslayHighlightUpdate);
     }
 
 

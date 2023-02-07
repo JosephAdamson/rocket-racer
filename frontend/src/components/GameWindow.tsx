@@ -131,22 +131,19 @@ export default function GameWindow() {
     }, [snippets]);
 
 
-    useEffect(() => {
-    }, [textDisplayHighlight]);
-
-
     return (
-        <div className="flex flex-col w-2/3 h-auto border-2 border-purple-500 p-4">
+        <div className="flex flex-col w-2/3 h-auto border-2 rounded-md p-4">
             <h2>3...2...1..LIFT OFF! Type the text below:</h2>
             <div>
             </div>
-            <div className="flex flex-col border-2 border-pink-500 gap-4 p-4">
-                <p className="border-2 border-black rounded-md h-auto w-full p-4">
+            <div className="flex flex-col gap-4 p-4">
+                <p className="border-2 rounded-md h-auto w-full p-4">
                     {textDisplay.map((word, i) => {
                         return spanify(word, i);
                     })}
                 </p>
-                <input className="border-2 border-green-500 p-2 rounded-md" 
+                <input className={`border-2 p-2 rounded-md 
+                        ${textDisplayHighlight[cursor] < 0 ? "bg-red-200" : ""}`}
                         type="text"
                         onChange={inputHandler}
                         onKeyUp={keyUpHandler}

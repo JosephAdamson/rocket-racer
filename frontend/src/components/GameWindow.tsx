@@ -3,8 +3,16 @@ import { BaseURL } from "../shared";
 import { Snippet } from "../types";
 import { v4 as uuidv4 } from 'uuid';
 import Timer from "./Timer";
+import RocketTrack from "./RocketTrack";
+import rocket_red from "../assets/rocket_red.png";
+import rocket_yellow from "../assets/rocket_yellow.png";
+import rocket_black from "../assets/rocket_black.png";
+import rocket_blue from "../assets/rocket_blue.png";
 
 
+/*
+Main interface panel for active game session. 
+*/
 export default function GameWindow() {
     const [textDisplay, setTextDisplay] = useState<string[]>([]);
     const [textDisplayHighlight, setTextDisplayHighlight] = useState<number[]>([]);
@@ -12,7 +20,14 @@ export default function GameWindow() {
     const [displaySnippet, setDisplaySnippet] = useState<Snippet>();
     const [cursor, setCursor] = useState<number>(0);
     const [inputField, setInputField] = useState<string>("");
+    const [timerIsActive, setTimerIsActive] = useState<boolean>(false);
 
+    const players = [
+        rocket_red,
+        rocket_blue,
+        rocket_yellow,
+        rocket_black
+    ];
 
     /*
     Fetch Snippet data from Rocket Racer API
@@ -82,7 +97,7 @@ export default function GameWindow() {
         // console.log(`${expected} : ${actual}`);
          
         const textDipslayHighlightUpdate = {...textDisplayHighlight}
-        if (isWordMatch(actual, expected)) {
+        if (isWordMatch(actual, expected) || actual === expected + " ") {
             const subLen = actual.length;
             textDipslayHighlightUpdate[cursor] = subLen;
         } else if (!actual) {
@@ -106,6 +121,16 @@ export default function GameWindow() {
                 setCursor(cursor => cursor + 2);
             }
         }
+    }
+
+
+    const activeTimerHandler = (isActive: boolean) => {
+        setTimerIsActive(isActive);
+    }
+
+
+    const resetHandler = () => {
+        setTimerIsActive(true);
     }
 
 
@@ -136,9 +161,12 @@ export default function GameWindow() {
         <div className="flex flex-col w-2/3 h-auto border-2 rounded-md p-4">
             <div className="flex justify-between">
                 <h2>3...2...1..LIFT OFF! Type the text below:</h2>
-                <Timer timeLimit={120}/>
+                <Timer timeLimit={20}
+                        activeTimerHandler={activeTimerHandler}
+                />
             </div>
             <div>
+                {players.map(player => <RocketTrack rocket_img={player}/>)}
             </div>
             <div className="flex flex-col gap-4 p-4">
                 <p className="border-2 rounded-md h-auto w-full p-4">
@@ -146,13 +174,19 @@ export default function GameWindow() {
                         return spanify(word, i);
                     })}
                 </p>
-                <input className={`border-2 p-2 rounded-md 
-                        ${textDisplayHighlight[cursor] < 0 ? "bg-red-200" : ""}`}
-                        type="text"
-                        onChange={inputHandler}
-                        onKeyUp={keyUpHandler}
-                        value={inputField}
-                        />
+                {timerIsActive ? 
+                    <input className={`border-2 p-2 rounded-md 
+                            ${textDisplayHighlight[cursor] < 0 ? "bg-red-200" : ""}`}
+                            type="text"
+                            onChange={inputHandler}
+                            onKeyUp={keyUpHandler}
+                            value={inputField}
+                            /> :
+                    <div>
+                        <button className="" onClick={resetHandler}>RESET</button>
+                    </div>
+                    
+                    }
             </div>
         </div>
     );

@@ -2,8 +2,15 @@ import { useEffect, useState } from 'react';
 
 interface TimerProps {
     timeLimit: number
+    activeTimerHandler: (isActive: boolean) => void
 }
 
+/*
+Initialize a timer of a given game session
+
+@param  {number}    timeLimit duration of countdown (seconds)
+@param  {Function}  handler function managing parent state indicating whether time is active.
+*/
 export default function Timer(props: TimerProps) {
     const [minutes, setMinutes] = useState<number>(0);
     const [seconds, setSeconds] = useState<number>(0);
@@ -12,7 +19,8 @@ export default function Timer(props: TimerProps) {
 
         const timerIntervalID = setInterval(() => {
             if (timeLimit < 0) {
-                clearInterval(timerIntervalID)
+                clearInterval(timerIntervalID);
+                props.activeTimerHandler(false);
             } else {
                 setMinutes(Math.floor(timeLimit / 60));
                 setSeconds(timeLimit % 60);
@@ -24,6 +32,7 @@ export default function Timer(props: TimerProps) {
 
     useEffect(() => {
         initTimer(props.timeLimit);
+        props.activeTimerHandler(true);
     },[]);
 
 

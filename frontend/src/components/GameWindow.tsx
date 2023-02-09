@@ -2,25 +2,26 @@ import { useEffect, useState , ChangeEvent, KeyboardEvent} from "react";
 import { BaseURL } from "../shared";
 import { Snippet } from "../types";
 import { v4 as uuidv4 } from 'uuid';
-import Timer from "./Timer";
 import RocketTrack from "./RocketTrack";
 import rocket_red from "../assets/rocket_red.png";
 import rocket_yellow from "../assets/rocket_yellow.png";
 import rocket_black from "../assets/rocket_black.png";
 import rocket_blue from "../assets/rocket_blue.png";
 
+interface GameWindowProps {
+    isActive: boolean;
+}
 
 /*
 Main interface panel for active game session. 
 */
-export default function GameWindow() {
+export default function GameWindow(props: GameWindowProps) {
     const [textDisplay, setTextDisplay] = useState<string[]>([]);
     const [textDisplayHighlight, setTextDisplayHighlight] = useState<number[]>([]);
     const [snippets, setSnippets] = useState<Snippet[]>([]);
     const [displaySnippet, setDisplaySnippet] = useState<Snippet>();
     const [cursor, setCursor] = useState<number>(0);
     const [inputField, setInputField] = useState<string>("");
-    const [timerIsActive, setTimerIsActive] = useState<boolean>(false);
 
     const players = [
         rocket_red,
@@ -93,8 +94,6 @@ export default function GameWindow() {
         const expected = textDisplay[cursor];
         const actual = e.currentTarget.value;
         setInputField(actual);
-        // console.log(isWordMatch(actual, expected));
-        // console.log(`${expected} : ${actual}`);
          
         const textDipslayHighlightUpdate = {...textDisplayHighlight}
         if (isWordMatch(actual, expected) || actual === expected + " ") {
@@ -124,16 +123,6 @@ export default function GameWindow() {
     }
 
 
-    const activeTimerHandler = (isActive: boolean) => {
-        setTimerIsActive(isActive);
-    }
-
-
-    const resetHandler = () => {
-        setTimerIsActive(true);
-    }
-
-
     useEffect(() => {
         const url = `${BaseURL}/api/rand?page=1&limit=20`;
         fetchData(url);
@@ -158,15 +147,9 @@ export default function GameWindow() {
 
 
     return (
-        <div className="flex flex-col w-2/3 h-auto border-2 rounded-md p-4">
-            <div className="flex justify-between">
-                <h2>3...2...1..LIFT OFF! Type the text below:</h2>
-                <Timer timeLimit={20}
-                        activeTimerHandler={activeTimerHandler}
-                />
-            </div>
+        <div className="flex flex-col w-full h-auto border-2 rounded-md p-4">
             <div>
-                {players.map(player => <RocketTrack rocket_img={player}/>)}
+                {players.map(player => <RocketTrack key={uuidv4()} rocket_img={player}/>)}
             </div>
             <div className="flex flex-col gap-4 p-4">
                 <p className="border-2 rounded-md h-auto w-full p-4">
@@ -174,18 +157,14 @@ export default function GameWindow() {
                         return spanify(word, i);
                     })}
                 </p>
-                {timerIsActive ? 
+                {props.isActive ? 
                     <input className={`border-2 p-2 rounded-md 
                             ${textDisplayHighlight[cursor] < 0 ? "bg-red-200" : ""}`}
                             type="text"
                             onChange={inputHandler}
                             onKeyUp={keyUpHandler}
                             value={inputField}
-                            /> :
-                    <div>
-                        <button className="" onClick={resetHandler}>RESET</button>
-                    </div>
-                    
+                            /> : ""
                     }
             </div>
         </div>

@@ -1,9 +1,10 @@
 import React from 'react';
-import ActiveRace from './pages/ActiveRace';
+import TimerWindow from './components/TimerWindow';
+import PracticeSession from './pages/PracticeSession';
 
 function App() {
   return (
-    <ActiveRace/>
+    <PracticeSession/>
   );
 }
 

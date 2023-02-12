@@ -21,6 +21,7 @@ export default function TimerWindow(props: TimerProps) {
     const resetHandler = () => {
         setDummyVal(dummyVal => dummyVal + 1);
         setTimeLimit(props.timeLimit);
+        setIsActive(true);
         console.log(dummyVal);
     }
 

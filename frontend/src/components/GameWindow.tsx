@@ -114,12 +114,16 @@ export default function GameWindow(props: GameWindowProps) {
             const actual = inputField;
 
             if (isWordMatch(expected, actual)) {
-                // clear input field
                 setInputField("");
                 // skip space between words
                 setCursor(cursor => cursor + 2);
             }
         }
+    }
+
+
+    const getTextDisplayArrLength = (): number => {
+        return textDisplay.length;
     }
 
 
@@ -149,7 +153,10 @@ export default function GameWindow(props: GameWindowProps) {
     return (
         <div className="flex flex-col w-full h-auto border-2 rounded-md p-4">
             <div>
-                {players.map(player => <RocketTrack key={uuidv4()} rocket_img={player}/>)}
+                <RocketTrack rocket_img={rocket_blue} 
+                            textDisplayArrLength={textDisplay.length}
+                            getTextDisplayLength={getTextDisplayArrLength}
+                            position={cursor}/>
             </div>
             <div className="flex flex-col gap-4 p-4">
                 <p className="border-2 rounded-md h-auto w-full p-4">

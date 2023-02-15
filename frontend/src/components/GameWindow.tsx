@@ -122,13 +122,8 @@ export default function GameWindow(props: GameWindowProps) {
     }
 
 
-    const getTextDisplayArrLength = (): number => {
-        return textDisplay.length;
-    }
-
-
     useEffect(() => {
-        const url = `${BaseURL}/api/rand?page=1&limit=20`;
+        const url = `${BaseURL}/api/rand?page=1&limit=1`;
         fetchData(url);
     }, []);
 
@@ -154,8 +149,8 @@ export default function GameWindow(props: GameWindowProps) {
         <div className="flex flex-col w-full h-auto border-2 rounded-md p-4">
             <div>
                 <RocketTrack rocket_img={rocket_blue} 
-                            textDisplayArrLength={textDisplay.length}
-                            getTextDisplayLength={getTextDisplayArrLength}
+                            // pass text display / 2 to account to text without whitespace
+                            textDisplayArrLength={textDisplay.length / 2}
                             position={cursor}/>
             </div>
             <div className="flex flex-col gap-4 p-4">

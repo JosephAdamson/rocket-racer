@@ -5,7 +5,6 @@ interface RocketTrackProps {
     textDisplayArrLength: number
     position: number
     rocket_img: string
-    getTextDisplayLength: () => number
 }
 
 
@@ -17,6 +16,7 @@ export default function RocketTrack(props: RocketTrackProps) {
     const getOffset = (percentage: number): number => {
         if (track.current) {
             const trackWidth: number = track.current.getBoundingClientRect().width;
+            console.log(`%ctrackWidth: ${trackWidth}`, 'color: yellow');
             return (trackWidth / 100) * percentage;
         } else {
             return 0;
@@ -35,11 +35,11 @@ export default function RocketTrack(props: RocketTrackProps) {
         if (curr > 0) {
             // negate elements containing whitespace
             curr = curr / 2;
-            const trackLen: number = props.getTextDisplayLength();
             const halfRocketWidth = getRocketWidth() / 2;
-            const trackPercentage = (props.position / trackLen) * 100;
-            const offset = halfRocketWidth + (halfRocketWidth / 100) * trackPercentage;
-            const increment: number = getOffset(trackPercentage) - offset;
+            const wordCount: number = Math.ceil(props.textDisplayArrLength);
+            const trackPercentage = ((props.position / 2) / wordCount) * 100;
+            const offset = halfRocketWidth / 2 + (halfRocketWidth / 100) * trackPercentage;
+            const increment: number = (getOffset(trackPercentage) - offset);
             setProgress(`translateX(${increment}px)`)
         }
     }, [props]);

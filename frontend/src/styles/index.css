@@ -8,3 +8,7 @@ App Styles
 ========== 
 */
 
+@font-face {
+    font-family: 'SourceCodePro';
+    src: url('../../public/fonts/SourceCodeProRegualr.ttf');
+}

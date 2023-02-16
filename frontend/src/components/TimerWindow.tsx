@@ -51,7 +51,7 @@ export default function TimerWindow(props: TimerProps) {
                 <h2>3...2...1..LIFT OFF! Type the text below:</h2>
                 <h1 className={`font-bold ${minutes === 0 && seconds <= 10 
                     ? "text-red-500" : ""}`
-                    }>{minutes}: {seconds}
+                    }>{minutes}: {seconds < 10 ? 0 + seconds.toString() : seconds}
                 </h1>
             </div>
             <GameWindow key={dummyVal} isActive={isActive}/>

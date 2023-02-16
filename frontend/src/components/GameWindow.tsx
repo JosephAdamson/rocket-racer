@@ -154,7 +154,7 @@ export default function GameWindow(props: GameWindowProps) {
                             position={cursor}/>
             </div>
             <div className="flex flex-col gap-4 p-4">
-                <p className="border-2 rounded-md h-auto w-full p-4">
+                <p className="border-2 rounded-md h-auto w-full p-4 font-sourceCode">
                     {textDisplay.map((word, i) => {
                         return spanify(word, i);
                     })}

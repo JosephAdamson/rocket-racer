@@ -7,6 +7,9 @@ module.exports = {
     extend: {
       colors: {
         mainPurple: "#a32ce8"
+      },
+      fontFamily: {
+        sourceCode: ['sourceCodePro']
       }
     },
   },

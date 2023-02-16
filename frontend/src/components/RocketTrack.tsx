@@ -16,7 +16,6 @@ export default function RocketTrack(props: RocketTrackProps) {
     const getOffset = (percentage: number): number => {
         if (track.current) {
             const trackWidth: number = track.current.getBoundingClientRect().width;
-            console.log(`%ctrackWidth: ${trackWidth}`, 'color: yellow');
             return (trackWidth / 100) * percentage;
         } else {
             return 0;

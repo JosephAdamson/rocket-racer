@@ -2,7 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import Snippet from '../models/snippet';
 import APIError from '../errors/APIError';
 
-
+/* 
+Test end point (retrieves all available snippets) 
+*/
 const getSnippetsStatic = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const result = await Snippet.find({});
@@ -24,6 +26,9 @@ interface queryObj {
 }
 
 
+/*
+Get snippet using custom query, allows for sorting. 
+*/
 const getSnippets = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { artist, title, sort } = req.query;
@@ -60,7 +65,9 @@ const getSnippets = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-
+/*
+Get random collection (size of collection specfied by 'limit') 
+*/
 const getSnippetsRandom = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const limit = req.query.limit && typeof req.query.limit === 'string'? 
@@ -82,8 +89,36 @@ const getSnippetsRandom = async (req: Request, res: Response, next: NextFunction
 }
 
 
+/*
+End point not used by the app, only used for db maintenance 
+with limited query params atm.
+*/
+const deleteSnippets = async (req: Request, res: Response, next: NextFunction) => {
+    try {   
+        const { artist } = req.query;
+        const query: queryObj = {}
+
+        if (artist && typeof artist === 'string') {
+            query.artist = artist.toLowerCase();
+        }
+        console.log(query);
+
+        const result = await Snippet.deleteMany(query);
+
+        // lets just return response
+        res.status(200).json({
+            success: true,
+            data: result
+        });
+    } catch (error) {
+        next(error);
+    }
+}
+
+
 export {
     getSnippetsStatic,
     getSnippets,
-    getSnippetsRandom
+    getSnippetsRandom,
+    deleteSnippets
 }

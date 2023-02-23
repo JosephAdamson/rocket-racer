@@ -22,12 +22,18 @@ export default function RocketTrack(props: RocketTrackProps) {
         }
     }
 
-    
+    /*
+    @return {number}    width of the container element for the rocket track (a div) 
+    */
     const getRocketWidth = () => {
         return rocket.current ? rocket.current.getBoundingClientRect().width : 0;
     }
 
 
+    /*
+    Re-compute position of rocket track on rerender according to cursor state
+    of parent (probably poorly optimized) 
+    */
     useEffect(() => {
         // calculate progress
         let curr = props.position;
@@ -45,7 +51,7 @@ export default function RocketTrack(props: RocketTrackProps) {
     
 
     return (
-        <div ref={track} className={`border-b-2 border-dashed`}>
+        <div ref={track} className="border-b-2 border-dashed">
             <img ref={rocket} className="h-20" style={{transform: progress}} src={props.rocket_img} alt="rocket img" />
         </div>
     )

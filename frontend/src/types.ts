@@ -7,3 +7,11 @@ export interface Snippet {
     text: string,
     img: string
 }
+
+
+export interface Results {
+    snippet: Snippet;
+    timeRemaining: number;
+    baseTime: number;
+    cursor: number;
+}

@@ -8,8 +8,10 @@ import rocket_yellow from "../assets/rocket_yellow.png";
 import rocket_black from "../assets/rocket_black.png";
 import rocket_blue from "../assets/rocket_blue.png";
 
+
 interface GameWindowProps {
     timeLimit: number;
+    setResultsHandler: (snippet: Snippet, timeRemaining: number, cursor: number, timeLimit: number) => void
 }
 
 /*
@@ -174,6 +176,9 @@ export default function GameWindow(props: GameWindowProps) {
     */
     useEffect(() => {
         if (timeLimit < 0 || completed) {
+            if (displaySnippet) {
+                props.setResultsHandler(displaySnippet, timeLimit, cursor, props.timeLimit);
+            }
             return;
         }
 

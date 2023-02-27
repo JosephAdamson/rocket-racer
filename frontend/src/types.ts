@@ -14,4 +14,6 @@ export interface Results {
     timeRemaining: number;
     baseTime: number;
     cursor: number;
+    keyStrokes: number;
+    errors: number;
 }

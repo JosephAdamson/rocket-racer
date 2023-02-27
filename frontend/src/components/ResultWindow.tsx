@@ -22,15 +22,28 @@ export default function ResultWindow(props: resultWindowProps) {
     @param  {string[]}  processed text from snippet;
     */
     const computeGrossWpm = (textDisplay: string[], cursor: number, timeRemaining: number): void => {
-        console.log(props.results.baseTime);
+        console.log(`baseTime: ${props.results.baseTime}`);
+        console.log(`time remaining: ${timeRemaining}`);
+        console.log(`key strokes: ${props.results.keyStrokes}`);
+        console.log(`errors: ${props.results.errors}`)
         const timeInMins = (props.results.baseTime - timeRemaining) / 60;
         const completed = textDisplay.slice(0, cursor);
-        console.log(timeInMins);
-        // note: polyfill for replace all .replace('/blah/g'/);
+        // note: polyfill for replaceAll() would be .replace('/blah/g'/);
         const characterStr = completed.join('').replaceAll(' ', '');
-        console.log(characterStr.length);
         const res = Math.floor((characterStr.length / 5) / timeInMins);
         setWpmDisplay(res);
+    }
+
+
+    const computeAccuracy = (keyStrokes: number, errors: number) => {
+        const res = keyStrokes > 0 ? ((keyStrokes - errors) / keyStrokes) * 100 : 100;
+        return res < 100 ? res.toFixed(2) : res;
+    }
+
+
+    const formatTimeTaken = (baseTime: number, timeRemaining: number) => {
+        const dif = baseTime - timeRemaining;
+        return `${Math.floor(dif / 60)}:${dif % 60}`;
     }
 
 
@@ -56,21 +69,26 @@ export default function ResultWindow(props: resultWindowProps) {
                             <img className="w-6 h-6 my-2 bg-white rounded-full p-1" src={keyboard} alt="keyboard" />
                             <div className="flex justify-between text-white md:w-1/4">
                                 <h3 className="mx-2">Your speed:</h3>
-                                <h2 className="text-xl text-bold">{wpmDisplay} wpm</h2>
+                                <h2 className="text-lg md:text-xl text-bold">{wpmDisplay} wpm</h2>
                             </div>
                         </div>
                         <div className="flex items-center">
                             <img className="w-6 h-6 my-2 bg-white rounded-full p-1" src={clock} alt="clock" />
                             <div className="flex justify-between text-white md:w-1/4">
                                 <h3 className="text-white mx-2">Time:</h3>
-                                <h2 className="text-xl">
-                                    {`${Math.floor(props.results.timeRemaining / 60)}: ${props.results.timeRemaining % 60}`}
+                                <h2 className="text-lg md:text-xl">
+                                    {formatTimeTaken(props.results.baseTime, props.results.timeRemaining)}
                                 </h2>
                             </div>
                         </div>
                         <div className="flex items-center">
                             <img className="w-6 h-6 my-2 bg-white rounded-full p-1" src={checkmark} alt="clock" />
-                            <h3 className="text-white mx-2">Accuracy:</h3>
+                            <div className="flex justify-between text-white md:w-1/4">
+                                <h3 className="text-white mx-2">Accuracy:</h3>
+                                <h2 className="text-lg md:text-xl">
+                                    {computeAccuracy(props.results.keyStrokes, props.results.errors)}%
+                                </h2>
+                            </div>
                         </div>
                     </div>
                 </div>

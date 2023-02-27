@@ -11,7 +11,13 @@ import rocket_blue from "../assets/rocket_blue.png";
 
 interface GameWindowProps {
     timeLimit: number;
-    setResultsHandler: (snippet: Snippet, timeRemaining: number, cursor: number, timeLimit: number) => void
+    setResultsHandler: (snippet: Snippet, 
+            timeRemaining: number, 
+            cursor: number, 
+            timeLimit: number,
+            keyStrokes: number,
+            errors: number
+            ) => void
 }
 
 /*
@@ -29,6 +35,9 @@ export default function GameWindow(props: GameWindowProps) {
     const [minutes, setMinutes] = useState<number>(Math.floor(props.timeLimit / 60));
     const [seconds, setSeconds] = useState<number>(props.timeLimit % 60);
     const [timeLimit, setTimeLimit] = useState<number>(props.timeLimit);
+
+    const [keyStrokes, setKeyStrokes] = useState<number>(0);
+    const [errors, setErrors] = useState<number>(0);
 
     // temporary
     const players = [
@@ -116,8 +125,10 @@ export default function GameWindow(props: GameWindowProps) {
             textDipslayHighlightUpdate[cursor] = 0;
         } else {
             textDipslayHighlightUpdate[cursor] = -1;
+            setErrors(error => error + 1);
         }
         setTextDisplayHighlight(textDipslayHighlightUpdate);
+        setKeyStrokes(keyStrokes => keyStrokes + 1);
     }
 
 
@@ -175,9 +186,16 @@ export default function GameWindow(props: GameWindowProps) {
     Initiate timer 
     */
     useEffect(() => {
-        if (timeLimit < 0 || completed) {
+        if (timeLimit === 0 || completed) {
             if (displaySnippet) {
-                props.setResultsHandler(displaySnippet, timeLimit, cursor, props.timeLimit);
+                props.setResultsHandler(
+                    displaySnippet, 
+                    timeLimit, 
+                    cursor, 
+                    props.timeLimit,
+                    keyStrokes,
+                    errors
+                    );
             }
             return;
         }

@@ -7,12 +7,21 @@ export default function PracticeSession() {
     const [results, setResults] = useState<Results | null>();
 
 
-    const setResultHandler = (snippet: Snippet, timeRemaining: number, cursor: number, baseTime: number) => {
+    const setResultHandler = (
+        snippet: Snippet, 
+        timeRemaining: number, 
+        cursor: number, 
+        baseTime: number,
+        keyStrokes: number,
+        errors: number
+        ) => {
         setResults({
             snippet: snippet,
             timeRemaining: timeRemaining,
             cursor: cursor,
-            baseTime: baseTime
+            baseTime: baseTime,
+            keyStrokes: keyStrokes,
+            errors: errors
         });
     }
 

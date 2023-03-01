@@ -96,7 +96,7 @@ export default function GameWindow(props: GameWindowProps) {
             if (cursor >= pos) {
                 return <span className={
                     (textDisplayHighlight[cursor] > 0 && i < subLen) || cursor > pos ?
-                        `text-green-500` :
+                        `text-highlightgreen` :
                         'bg-red-200'
                 } key={uuidv4()}>{letter}</span>
             } else {
@@ -166,11 +166,12 @@ export default function GameWindow(props: GameWindowProps) {
 
 
     /*
-    Grab Snippet and set up current display state  
+    Grab Snippet and set up current display state 
+    The raw snippet text is in a bit of a state so it needs some extra formatting.
     */
     useEffect(() => {
         if (displaySnippet) {
-            let newDisplayText: string = displaySnippet.text.replaceAll('\n', ' ');
+            let newDisplayText: string = displaySnippet.text.replaceAll('\n', '. ');
             let newDisplayTextArr: string[] = newDisplayText.split(' ');
             newDisplayText = newDisplayTextArr.join('* *');
             newDisplayTextArr = newDisplayText.split('*');
@@ -214,7 +215,7 @@ export default function GameWindow(props: GameWindowProps) {
 
 
     return (
-        <div className="flex flex-col w-full md:w-2/3 h-auto border-2 rounded-md p-4 text-sm md:text-base">
+        <div className="flex flex-col w-full md:w-2/3 h-auto border-2 rounded-md p-4 text-sm md:text-base bg-white">
             <div className="flex justify-between m-2">
                 <h2>3...2...1..LIFT OFF! Type the text below:</h2>
                 <h1 className={`font-bold ${minutes === 0 && seconds <= 10
@@ -222,19 +223,20 @@ export default function GameWindow(props: GameWindowProps) {
                 }>{minutes}: {seconds < 10 ? 0 + seconds.toString() : seconds}
                 </h1>
             </div>
-            <div className="flex flex-col w-full h-auto border-2 rounded-md  p-0 md:p-4">
+            <div className="flex flex-col w-full h-auto p-0 md:p-4">
                 <RocketTrack rocket_img={rocket_blue}
                     // pass text display / 2 (text without whitespace)
                     textDisplayArrLength={textDisplay.length / 2}
                     position={cursor} />
-                <div className="flex flex-col gap-4 p-4">
-                    <p className="border-2 rounded-md h-auto w-full p-4 font-sourceCode">
+                <div className="flex flex-col gap-4 p-4 bg-clearblue/[0.03] 
+                border-2 border-coolgrey rounded-md my-4">
+                    <p className="h-auto w-full p-4 font-sourceCode">
                         {textDisplay.map((word, i) => {
                             return spanify(word, i);
                         })}
                     </p>
-                    <input className={`border-2 p-2 rounded-md 
-                            ${textDisplayHighlight[cursor] < 0 ? "bg-red-200" : ""}`}
+                    <input className={`p-2 border-2 border-coolgrey rounded-md
+                            ${textDisplayHighlight[cursor] < 0 ? "bg-red-200" : "text-black/[0.5]"}`}
                         type="text"
                         onChange={inputHandler}
                         onKeyUp={keyUpHandler}

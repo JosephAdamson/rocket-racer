@@ -17,3 +17,9 @@ export interface Results {
     keyStrokes: number;
     errors: number;
 }
+
+
+export interface LinkItem {
+    name: string;
+    href: string;
+}

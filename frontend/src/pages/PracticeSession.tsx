@@ -7,6 +7,15 @@ export default function PracticeSession() {
     const [results, setResults] = useState<Results | null>();
 
 
+    /*
+    Set results of Practice session once Game Window has expired.
+    
+    @param  {Snippet}       snippet         Object containing song data (text, img etc.)
+    @param  {number}        timeRemaining   Remaining minutes/seconds from a completed session.
+    @param  {number}        baseTime        Time alloted for a single session.
+    @param  {number}        keystrokes      Total keystrokes for a single session.
+    @param  {number}        errors          Total errors for a  single session.  
+    */
     const setResultHandler = (
         snippet: Snippet, 
         timeRemaining: number, 
@@ -28,7 +37,6 @@ export default function PracticeSession() {
 
     return (
         <div className="flex justify-center items-center">
-            {/* <TimerWindow timeLimit={120}/> */}
             {results ? <ResultWindow results={results} /> : <GameWindow timeLimit={120} 
                                                                 setResultsHandler={setResultHandler} />}
         </div>

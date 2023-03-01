@@ -32,7 +32,7 @@ export default function RocketTrack(props: RocketTrackProps) {
 
     /*
     Re-compute position of rocket track on rerender according to cursor state
-    of parent (probably poorly optimized) 
+    of parent.
     */
     useEffect(() => {
         // calculate progress
@@ -51,7 +51,7 @@ export default function RocketTrack(props: RocketTrackProps) {
     
 
     return (
-        <div ref={track} className="border-b-2 border-dashed">
+        <div ref={track} className="border-b-2 border-dashed border-dashyellow">
             <img ref={rocket} className="h-20" style={{transform: progress}} src={props.rocket_img} alt="rocket img" />
         </div>
     )

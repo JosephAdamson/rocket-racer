@@ -12,3 +12,8 @@ App Styles
     font-family: 'SourceCodePro';
     src: url('../../public/fonts/SourceCodeProRegualr.ttf');
 }
+
+.liftoff {
+    background-image: url("../assets/liftoff.jpg");
+    background-size: cover;
+}

@@ -1,11 +1,58 @@
-import rocket from '../assets/rocket.png';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { LinkItem } from '../types';
+import { useState, useEffect } from 'react';
+
 
 export default function Navbar() {
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+
+
+    const navigation: LinkItem[] = [
+        { name: "Practice", href: "/practice" },
+        { name: "Play", href: "/play" }
+    ];
+
+
+    const openhandler = (): void => {
+        setIsOpen(open => !open);
+    }
+
+
+    useEffect(() => {
+        // reset state of mobile link menu if view is changed to desktop
+        const closeResize = () => {
+            if (window.innerWidth > 400) {
+                setIsOpen(false);
+            }
+        }
+        window.addEventListener('resize', closeResize);
+    },);
+
+
     return (
-        <nav className="flex h-20 bg-mainPurple w-full">
-            <div className="p-2">
-                <img src={rocket} alt="rocket.img" className="h-14" />
-            </div>
+
+        <nav className={`flex ${isOpen ? "h-[180px]" : "h-[70px]"} bg-slateblue w-full 
+            transition-all ease-linear duration-300`}>
+            {<div className="flex flex-col sm:flex-row max-w-7xl justify-between">
+                <div className="flex items-center sm:hidden p-4">
+                    <button className="text-white" onClick={openhandler}>
+                        <span className="sr-only">Open main menu</span>
+                        {isOpen ?
+                            <XMarkIcon className="block h-8 w-8" aria-hidden="true" /> :
+                            <Bars3Icon className="block h-8 w-8" aria-hidden="true" />}
+                    </button>
+                </div>
+                <div className="justify-center text-xl items-center space-x-4 px-4 border-white hidden sm:flex text-white">
+                    {navigation.map(link => {
+                        return <a key={link.name} href={link.href}>{link.name}</a>
+                    })}
+                </div>
+                {isOpen ? <div className="flex text-lg flex-1 flex-col p-4 text-white space-y-4 sm:hidden">
+                    {navigation.map(link => {
+                        return <a key={link.name} href={link.href}>{link.name}</a>
+                    })}
+                </div> : ""}
+            </div>}
         </nav>
     );
 }

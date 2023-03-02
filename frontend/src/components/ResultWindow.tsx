@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import clock from '../assets/clock.png';
 import keyboard from '../assets/keyboard.png';
 import checkmark from '../assets/checkmark.png';
+import accuracy from '../assets/accuracy.png'
 
 
 interface resultWindowProps {
@@ -61,6 +62,13 @@ export default function ResultWindow(props: resultWindowProps) {
     }
 
 
+    const computeCompleted = (wordCount: number, cursor: number) => {
+        const complete = ((cursor - 1) / wordCount) * 100;
+        console.log(complete);
+        return complete < 100 ? complete.toFixed(2) : complete;
+    }
+
+
     useEffect(() => {
         computeGrossWpm(displaySnippet.text.split(' '), props.results.cursor, props.results.timeRemaining);
     }, []);
@@ -84,27 +92,44 @@ export default function ResultWindow(props: resultWindowProps) {
                     <div className="p-6">
                         <div className="flex items-center">
                             <img className="w-6 h-6 my-2 bg-white rounded-full p-1" src={keyboard} alt="keyboard" />
-                            <div className="flex justify-between text-white md:w-1/3">
+                            <div className="flex justify-between text-white w-full md:w-2/5">
                                 <h3 className="mx-2">Your speed:</h3>
-                                <h2 className="text-lg md:text-xl text-bold">{wpmDisplay} wpm</h2>
+                                <div className="flex justify-start w-20">
+                                    <h2 className="text-lg md:text-xl text-bold">{wpmDisplay} wpm</h2>
+                                </div>
                             </div>
                         </div>
                         <div className="flex items-center">
                             <img className="w-6 h-6 my-2 bg-white rounded-full p-1" src={clock} alt="clock" />
-                            <div className="flex justify-between text-white md:w-1/3">
+                            <div className="flex justify-between text-white w-full md:w-2/5">
                                 <h3 className="text-white mx-2">Time:</h3>
-                                <h2 className="text-lg md:text-xl">
-                                    {formatTimeTaken(props.results.baseTime, props.results.timeRemaining)}
-                                </h2>
+                                <div className="flex justify-start w-20">
+                                    <h2 className="text-lg md:text-xl">
+                                        {formatTimeTaken(props.results.baseTime, props.results.timeRemaining)}
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex items-center">
+                            <img className="w-6 h-6 my-2 bg-white rounded-full p-1" src={accuracy} alt="clock" />
+                            <div className="flex justify-between text-white w-full md:w-2/5">
+                                <h3 className="text-white mx-2">Accuracy:</h3>
+                                <div className="flex justify-start w-20">
+                                    <h2 className="text-lg md:text-xl">
+                                        {computeAccuracy(props.results.keyStrokes, props.results.errors)}%
+                                    </h2>
+                                </div>
                             </div>
                         </div>
                         <div className="flex items-center">
                             <img className="w-6 h-6 my-2 bg-white rounded-full p-1" src={checkmark} alt="clock" />
-                            <div className="flex justify-between text-white md:w-1/3">
-                                <h3 className="text-white mx-2">Accuracy:</h3>
-                                <h2 className="text-lg md:text-xl">
-                                    {computeAccuracy(props.results.keyStrokes, props.results.errors)}%
-                                </h2>
+                            <div className="flex justify-between text-white w-full md:w-2/5">
+                                <h3 className="text-white mx-2">Complete:</h3>
+                                <div className="flex justify-start w-20">
+                                    <h2 className="text-lg md:text-xl">
+                                        {computeCompleted(props.results.wordCount, props.results.cursor)}%
+                                    </h2>
+                                </div>
                             </div>
                         </div>
                     </div>

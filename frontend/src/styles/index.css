@@ -9,8 +9,19 @@ App Styles
 */
 
 @font-face {
-    font-family: 'SourceCodePro';
-    src: url('../../public/fonts/SourceCodeProRegualr.ttf');
+    font-family: "SourceCodePro";
+    src: url("../../public/fonts/SourceCodeProRegualr.ttf");
+}
+
+@font-face {
+    font-family: "Mulish";
+    src: url('../../public/fonts/MulishVariable.ttf');
+}
+
+@layer base {
+    html {
+        font-family: 'mulish', 'sans-serif';
+    }
 }
 
 .liftoff {

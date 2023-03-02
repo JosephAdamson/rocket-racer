@@ -26,8 +26,9 @@ module.exports = {
         }
       },
       fontFamily: {
-        sourceCode: ["sourceCodePro"]
-      }
+        sourceCode: ['Source Code Pro','monospace'],
+        mulish: ['Mulish', 'sans-serif']
+      },
     },
   },
   plugins: [],

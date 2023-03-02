@@ -35,7 +35,7 @@ export default function Navbar() {
     return (
 
         <nav className={`flex ${isOpen ? "h-[220px]" : "h-[70px]"} bg-slateblue w-full 
-            transition-all ease-linear duration-300`}>
+            transition-all ease-linear duration-300 font-mulish`}>
             {<div className="flex flex-col sm:flex-row max-w-7xl justify-between">
                 <div className="flex items-center sm:hidden p-4">
                     <button className="text-white" onClick={openhandler}>

@@ -16,7 +16,8 @@ interface GameWindowProps {
             cursor: number, 
             timeLimit: number,
             keyStrokes: number,
-            errors: number
+            errors: number,
+            wordCount: number
             ) => void
 }
 
@@ -195,7 +196,8 @@ export default function GameWindow(props: GameWindowProps) {
                     cursor, 
                     props.timeLimit,
                     keyStrokes,
-                    errors
+                    errors,
+                    textDisplay.length
                     );
             }
             return;

@@ -23,7 +23,8 @@ export default function Session() {
         cursor: number, 
         baseTime: number,
         keyStrokes: number,
-        errors: number
+        errors: number,
+        wordCount: number
         ) => {
         setResults({
             snippet: snippet,
@@ -31,7 +32,8 @@ export default function Session() {
             cursor: cursor,
             baseTime: baseTime,
             keyStrokes: keyStrokes,
-            errors: errors
+            errors: errors,
+            wordCount: wordCount
         });
     }
 

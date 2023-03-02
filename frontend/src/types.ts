@@ -16,6 +16,7 @@ export interface Results {
     cursor: number;
     keyStrokes: number;
     errors: number;
+    wordCount: number;
 }
 
 

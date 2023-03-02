@@ -1,6 +1,8 @@
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { LinkItem } from '../types';
 import { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
+import concatClasses from '../util';
 
 
 export default function Navbar() {
@@ -8,6 +10,7 @@ export default function Navbar() {
 
 
     const navigation: LinkItem[] = [
+        { name: "Home", href: "/"},
         { name: "Practice", href: "/practice" },
         { name: "Play", href: "/play" }
     ];
@@ -31,7 +34,7 @@ export default function Navbar() {
 
     return (
 
-        <nav className={`flex ${isOpen ? "h-[180px]" : "h-[70px]"} bg-slateblue w-full 
+        <nav className={`flex ${isOpen ? "h-[220px]" : "h-[70px]"} bg-slateblue w-full 
             transition-all ease-linear duration-300`}>
             {<div className="flex flex-col sm:flex-row max-w-7xl justify-between">
                 <div className="flex items-center sm:hidden p-4">
@@ -44,12 +47,18 @@ export default function Navbar() {
                 </div>
                 <div className="justify-center text-xl items-center space-x-4 px-4 border-white hidden sm:flex text-white">
                     {navigation.map(link => {
-                        return <a key={link.name} href={link.href}>{link.name}</a>
+                        return <NavLink className={({isActive}) => {
+                            return concatClasses(isActive ? "text-clearblue font-bold" : "text-white",  "hover:underline underline-offset-4")
+                        }} key={link.name} to={link.href}>{link.name}</NavLink>
                     })}
                 </div>
+                {/* mobile toggle menu */}
                 {isOpen ? <div className="flex text-lg flex-1 flex-col p-4 text-white space-y-4 sm:hidden">
                     {navigation.map(link => {
-                        return <a key={link.name} href={link.href}>{link.name}</a>
+                        return <NavLink className={({isActive}) => {
+                            return concatClasses(isActive ? "text-clearblue" : "text-white",  
+                            "animate-fadeIn transition-all duration-300 transform hover:translate-x-2")
+                        }} key={link.name} to={link.href}>{link.name}</NavLink>
                     })}
                 </div> : ""}
             </div>}

@@ -67,7 +67,8 @@ export default function ResultWindow(props: resultWindowProps) {
 
 
     return (
-        <div className="flex flex-col h-1/2 w-full md:w-2/3 bg-slateblue rounded-md m-6">
+        <div className="flex flex-col h-1/2 w-full md:w-2/3 bg-slateblue rounded-t-md m-x-6 m-t-6 
+            md:border-b-[1px] md:border-slate-300">
             <div className="border-b-[1px] border-slate-300 p-4">
                 <h3 className="text-md text-white">You just typed an excerpt from the song:</h3>
             </div>

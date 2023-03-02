@@ -10,13 +10,23 @@ module.exports = {
         coolgrey: "#bacbd9",
         highlightgreen: "#47d91a",
         dashyellow: "#f5d51d",
-        slateblue : "#243552"
+        slateblue: "#243552",
+        coolgreen: "#4caf50",
+        sparkorange: "#ff7c1d",
+        softgreen: "#4caf50",
+        melloworange: "#ffb21b"
       },
-      transitionProperty: {
-        height: 'height'
+      animation: {
+        "fadeIn": "fadeIn 1s ease-in"
+      },
+      keyframes: {
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" }
+        }
       },
       fontFamily: {
-        sourceCode: ['sourceCodePro']
+        sourceCode: ["sourceCodePro"]
       }
     },
   },

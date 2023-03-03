@@ -25,10 +25,6 @@ export default function ResultWindow(props: resultWindowProps) {
     @param  {string[]}  processed text from snippet;
     */
     const computeGrossWpm = (textDisplay: string[], cursor: number, timeRemaining: number): void => {
-        console.log(`baseTime: ${props.results.baseTime}`);
-        console.log(`time remaining: ${timeRemaining}`);
-        console.log(`key strokes: ${props.results.keyStrokes}`);
-        console.log(`errors: ${props.results.errors}`)
         const timeInMins = (props.results.baseTime - timeRemaining) / 60;
         const completed = textDisplay.slice(0, cursor);
         // note: polyfill for replaceAll() would be .replace('/blah/g'/);
@@ -63,7 +59,8 @@ export default function ResultWindow(props: resultWindowProps) {
 
 
     const computeCompleted = (wordCount: number, cursor: number) => {
-        const complete = ((cursor - 1) / wordCount) * 100;
+        const val = cursor > 0 ? cursor - 1 : cursor
+        const complete = (val / wordCount) * 100;
         console.log(complete);
         return complete < 100 ? complete.toFixed(2) : complete;
     }
@@ -75,7 +72,7 @@ export default function ResultWindow(props: resultWindowProps) {
 
 
     return (
-        <div className="flex flex-col h-1/2 w-full md:w-2/3 bg-slateblue rounded-t-md m-x-6 m-t-6 
+        <div className="flex flex-col h-1/2 w-full md:w-2/3 bg-slateBlue rounded-t-md m-x-6 m-t-6 
             md:border-b-[1px] md:border-slate-300">
             <div className="border-b-[1px] border-slate-300 p-4">
                 <h3 className="text-md text-white">You just typed an excerpt from the song:</h3>

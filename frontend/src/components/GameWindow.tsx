@@ -1,4 +1,4 @@
-import { useEffect, useState, ChangeEvent, KeyboardEvent } from "react";
+import { useEffect, useState, ChangeEvent, KeyboardEvent, useRef } from "react";
 import { BaseURL } from "../shared";
 import { Snippet } from "../types";
 import { v4 as uuidv4 } from 'uuid';
@@ -11,6 +11,7 @@ import rocket_blue from "../assets/rocket_blue.png";
 
 interface GameWindowProps {
     timeLimit: number;
+    timeDelay: number;
     setResultsHandler: (snippet: Snippet, 
             timeRemaining: number, 
             cursor: number, 
@@ -30,12 +31,14 @@ export default function GameWindow(props: GameWindowProps) {
     const [displaySnippet, setDisplaySnippet] = useState<Snippet>();
     const [cursor, setCursor] = useState<number>(0);
     const [inputField, setInputField] = useState<string>("");
+    const inputElement = useRef<HTMLInputElement | null>(null);
     const [completed, setCompleted] = useState<boolean>(false);
 
     // state for timer
+    const [showTimer, setShowTimer] = useState<boolean>(false);
     const [minutes, setMinutes] = useState<number>(Math.floor(props.timeLimit / 60));
     const [seconds, setSeconds] = useState<number>(props.timeLimit % 60);
-    const [timeLimit, setTimeLimit] = useState<number>(props.timeLimit);
+    const [timeLimit, setTimeLimit] = useState<number>(props.timeLimit + props.timeDelay);
 
     const [keyStrokes, setKeyStrokes] = useState<number>(0);
     const [errors, setErrors] = useState<number>(0);
@@ -97,7 +100,7 @@ export default function GameWindow(props: GameWindowProps) {
             if (cursor >= pos) {
                 return <span className={
                     (textDisplayHighlight[cursor] > 0 && i < subLen) || cursor > pos ?
-                        `text-highlightgreen` :
+                        `text-highlightGreen` :
                         'bg-red-200'
                 } key={uuidv4()}>{letter}</span>
             } else {
@@ -163,6 +166,12 @@ export default function GameWindow(props: GameWindowProps) {
     useEffect(() => {
         const url = `${BaseURL}/api/rand?page=1&limit=1`;
         fetchData(url);
+
+        // timer delay
+        setTimeout(() => {
+            setShowTimer(true);
+            inputElement.current?.focus();
+        }, props.timeDelay * 1000);
     }, []);
 
 
@@ -188,28 +197,27 @@ export default function GameWindow(props: GameWindowProps) {
     Initiate timer 
     */
     useEffect(() => {
-        if (timeLimit === 0 || completed) {
-            if (displaySnippet) {
-                props.setResultsHandler(
-                    displaySnippet, 
-                    timeLimit, 
-                    cursor, 
-                    props.timeLimit,
-                    keyStrokes,
-                    errors,
-                    textDisplay.length
-                    );
+            if (timeLimit === 0 || completed) {
+                if (displaySnippet) {
+                    props.setResultsHandler(
+                        displaySnippet, 
+                        timeLimit, 
+                        cursor, 
+                        props.timeLimit,
+                        keyStrokes,
+                        errors,
+                        textDisplay.length
+                        );
+                }
+                return;
             }
-            return;
-        }
-
-        const timerID = setInterval(() => {
-            setTimeLimit(timeLimit => timeLimit - 1);
-            setMinutes(Math.floor(timeLimit / 60));
-            setSeconds(timeLimit % 60);
-
-        }, 1000);
-
+    
+            const timerID = setInterval(() => {
+                setTimeLimit(timeLimit => timeLimit - 1);
+                setMinutes(Math.floor(timeLimit / 60));
+                setSeconds(timeLimit % 60);
+            }, 1000);
+        
         return () => {
             clearInterval(timerID)
         }
@@ -217,27 +225,27 @@ export default function GameWindow(props: GameWindowProps) {
 
 
     return (
-        <div className="flex flex-col w-full md:w-2/3 h-auto border-2 rounded-md p-4 text-sm md:text-base bg-white">
+        <div className="flex flex-col w-full md:w-2/3 h-auto border-2 rounded-md p-4 text-sm md:text-base bg-white"> 
             <div className="flex justify-between m-2">
                 <h2>3...2...1..LIFT OFF! Type the text below:</h2>
-                <h1 className={`font-bold ${minutes === 0 && seconds <= 10
+                { showTimer ? <h1 className={`font-bold ${minutes === 0 && seconds <= 10
                     ? "text-red-500" : ""}`
                 }>{minutes}: {seconds < 10 ? 0 + seconds.toString() : seconds}
-                </h1>
+                </h1> : ""}
             </div>
             <div className="flex flex-col w-full h-auto p-0 md:p-4">
                 <RocketTrack rocket_img={rocket_blue}
                     // pass text display / 2 (text without whitespace)
                     textDisplayArrLength={textDisplay.length / 2}
                     position={cursor} />
-                <div className="flex flex-col gap-4 p-4 bg-clearblue/[0.03] 
-                border-2 border-coolgrey rounded-md my-4">
+                <div className="flex flex-col gap-4 p-4 bg-clearBlue/[0.03] 
+                border-2 border-coolGrey rounded-md my-4">
                     <p className="h-auto w-full p-4 font-sourceCode">
                         {textDisplay.map((word, i) => {
                             return spanify(word, i);
                         })}
                     </p>
-                    <input className={`p-2 border-2 border-coolgrey rounded-md
+                    <input ref={inputElement} className={`p-2 border-2 border-coolGrey rounded-md
                             ${textDisplayHighlight[cursor] < 0 ? "bg-red-200" : "text-black/[0.5]"}`}
                         type="text"
                         onChange={inputHandler}

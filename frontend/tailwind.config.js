@@ -6,15 +6,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        clearblue: "#2c90e8",
-        coolgrey: "#bacbd9",
-        highlightgreen: "#47d91a",
-        dashyellow: "#f5d51d",
-        slateblue: "#243552",
-        coolgreen: "#4caf50",
-        sparkorange: "#ff7c1d",
-        softgreen: "#4caf50",
-        melloworange: "#ffb21b"
+        clearBlue: "#2c90e8",
+        coolGrey: "#bacbd9",
+        highlightGreen: "#47d91a",
+        dashYellow: "#f5d51d",
+        slateBlue: "#243552",
+        coolGreen: "#4caf50",
+        sparkOrange: "#ff7c1d",
+        softGreen: "#4caf50",
+        mellowOrange: "#ffb21b"
       },
       animation: {
         "fadeIn": "fadeIn 1s ease-in"
@@ -26,8 +26,9 @@ module.exports = {
         }
       },
       fontFamily: {
-        sourceCode: ['Source Code Pro','monospace'],
-        mulish: ['Mulish', 'sans-serif']
+        sourceCode: ['SourceCodePro','monospace'],
+        mulish: ['Mulish', 'sans-serif'],
+        timeBomb: ['TimeBomb', 'monospace']
       },
     },
   },

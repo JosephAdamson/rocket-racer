@@ -3,6 +3,7 @@ import GameWindow from "./GameWindow";
 import ResultWindow from './ResultWindow';
 import { Snippet, Results } from '../types';
 import { NavLink } from 'react-router-dom';
+import CountdownModal from './CountdownModal';
 
 export default function Session() {
     const [results, setResults] = useState<Results | null>();
@@ -40,20 +41,23 @@ export default function Session() {
 
     return (
         <div className="flex flex-col justify-center items-center">
+             <CountdownModal/>
             {results ? <>
                         <ResultWindow results={results}/> 
-                        <div className="flex bg-slateblue w-full border-t-[1px] border-slate-300 md:border-none
+                        <div className="flex bg-slateBlue w-full border-t-[1px] border-slate-300 md:border-none
                         border md:w-2/3 p-4 rounded-b-md justify-between">
-                            <button className="bg-softgreen font-bold text-white rounded-md p-4"
+                            <button className="bg-softGreen font-bold text-white rounded-md p-4
+                             hover:brightness-[0.85]"
                              onClick={() => {
                                 setResults(null);
                             }}>Try again</button>
-                            <button className="bg-melloworange font-bold text-white rounded-md p-4">
+                            <button className="bg-mellowOrange font-bold text-white rounded-md 
+                            p-4 hover:brightness-[0.85]">
                                 <NavLink to={"/"}>Home (leave practice)</NavLink>
                             </button>
                         </div>
                     </> 
-            : <GameWindow timeLimit={120} setResultsHandler={setResultHandler} />}
+            : <GameWindow timeLimit={120} timeDelay={3} setResultsHandler={setResultHandler} />}
         </div>
     )
 }

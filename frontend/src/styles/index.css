@@ -18,6 +18,11 @@ App Styles
     src: url('../../public/fonts/MulishVariable.ttf');
 }
 
+@font-face {
+    font-family: "TimeBomb";
+    src: url('../../public/fonts/timeBombRegular.ttf')
+}
+
 @layer base {
     html {
         font-family: 'mulish', 'sans-serif';

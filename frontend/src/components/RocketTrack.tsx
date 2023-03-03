@@ -51,7 +51,7 @@ export default function RocketTrack(props: RocketTrackProps) {
     
 
     return (
-        <div ref={track} className="border-b-2 border-dashed border-dashyellow">
+        <div ref={track} className="border-b-2 border-dashed border-dashYellow">
             <img ref={rocket} className="h-20" style={{transform: progress}} src={props.rocket_img} alt="rocket img" />
         </div>
     )

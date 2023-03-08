@@ -24,10 +24,10 @@ export default function CountdownModal() {
     return (
         showModal ?
             <div className="absolute top-[100px] md:top-[120px] flex justify-center items-center w-screen h-1/2">
-                <div className=" flex border-8 border-slateBlue justify-center items-center w-1/5
-                 md:w-1/12 bg-black font-timeBomb text-highlightGreen rounded-2xl">
-                    <h1 className="text-[8rem]">{counter}</h1>
+                <div className="flex justify-center items-center w-20 md:w-40 h-40
+                 md:w-1/12 bg-slateBlue rounded-md">
+                    <h1 className="block pt-4 text-right font-timeBomb text-white text-9xl">{counter}</h1>
                 </div>
             </div> : <></>
-    )
+    );
 }

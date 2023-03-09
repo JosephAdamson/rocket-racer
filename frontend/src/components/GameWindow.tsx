@@ -181,9 +181,9 @@ export default function GameWindow(props: GameWindowProps) {
     */
     useEffect(() => {
         if (displaySnippet) {
-            let newDisplayText: string = displaySnippet.text.replaceAll('\n', '. ');
-            let newDisplayTextArr: string[] = newDisplayText.split(' ');
-            newDisplayText = newDisplayTextArr.join('* *');
+            //let newDisplayText: string = displaySnippet.text.replaceAll('\n', '. ');
+            let newDisplayTextArr: string[] = displaySnippet.text.split(' ');
+            let newDisplayText = newDisplayTextArr.join('* *');
             newDisplayTextArr = newDisplayText.split('*');
             setTextDisplay(newDisplayTextArr);
             setTextDisplayHighlight(Array.from({

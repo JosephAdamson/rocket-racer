@@ -3,6 +3,8 @@ import 'dotenv/config';
 import app from './app';
 import connectDB from './db/connect';
 import env from './util/validateEvn';
+import setUpWebServer from './websockets';
+
 
 const PORT = env.PORT || 5000;
 
@@ -13,8 +15,7 @@ const start = async () => {
         const httpServer = app.listen(PORT, () => {
             console.log(`Express server listening on port ${PORT}`);
         });
-        
-        
+        const wss = setUpWebServer(httpServer);
 
     } catch (error) {
         console.error(error);

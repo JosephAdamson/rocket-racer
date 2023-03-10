@@ -8,7 +8,7 @@ const app = express();
 
 // for now just the port React is using
 const whiteList: string[] = ['http://localhost:3000'];
-const options: cors.CorsOptions = {
+const options: CorsOptions = {
     origin: whiteList
 }
 app.use(cors(options));

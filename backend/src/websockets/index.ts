@@ -3,16 +3,19 @@ import { Server, IncomingMessage } from 'http'
 import { getTimeStamp } from '../util/util';
 import internal from 'stream';
 import { WebSocket, WebSocketServer } from 'ws';
+import { v4 as uuidv4 } from 'uuid';
 
 
 export default async function setUpWebServer(expressServer: Server) {
-    // set up our web socket server without creating an additional http server
-    // as we are going to use the express http server.
+
+    // 2 connections per session
+    const sessions = new Map<string, WebSocket[]>();
+
+    // Don't need to create an addtional http server, we will use express.
     const wss = new WebSocketServer({
         noServer: true,
         path: "/websocket"
     });
-
 
     // hook our express http server with our newly made scoket server
     expressServer.on("upgrade", (request: IncomingMessage, socket: internal.Duplex, head: Buffer) => {
@@ -31,7 +34,25 @@ export default async function setUpWebServer(expressServer: Server) {
 
         //console.log(connectionParams);
 
-        // send test message on connection
+        //console.log(sessions.size);
+        console.log(wss.clients.size);
+        //find a joinable session
+        if (sessions.size > 0) {
+            let sessionID;
+            for (let [id, clients] of sessions.entries()) {
+                if (clients.length < 2) {
+                    sessionID = id;
+                    sessions.get(sessionID)!.push(ws);
+                }
+            }
+            if (!sessionID) {
+                sessions.set(uuidv4(), [ws]);
+            }
+        } else {
+            sessions.set(uuidv4(), [ws]);
+        }
+
+
         ws.send("Welcome....");
 
         // every time wss gets data from client
@@ -40,12 +61,13 @@ export default async function setUpWebServer(expressServer: Server) {
             //const msg = JSON.parse(data.toString());
             const msg = data.toString();
             console.log(`[from client @ ${timestamp}]: ${msg}`);
-
-            // test reply
-            ws.send("loud and clear");
+            ws.send(`Echo: ${msg}`);
+            console.log(`current sessions:`);
+            for (let [id, session] of sessions) {
+                console.log(`${id}: ${session}`);
+            }
         });
 
     });
-
     return wss;
 }

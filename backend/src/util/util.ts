@@ -14,6 +14,14 @@ const getTimeStamp = () => {
 }
 
 
+enum DataType {
+    CONNECTION,
+    DISCONNECT,
+    MESSAGE
+}
+
+
 export {
-    getTimeStamp
+    getTimeStamp,
+    DataType
 }

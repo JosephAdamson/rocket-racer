@@ -33,3 +33,7 @@ App Styles
     background-image: url("../assets/liftoff.jpg");
     background-size: cover;
 }
+
+.text-shadow {
+    text-shadow: black 0px 0px 3px; /* color offset-x offset-y blur-radius */
+ }

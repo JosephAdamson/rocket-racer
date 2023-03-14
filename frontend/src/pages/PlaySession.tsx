@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import { DataType } from "../util";
 import WaitingModal from "../components/WaitingModal";
 import Session from "../components/Session";
+import { useNavigate } from "react-router-dom";
 
 // This is just a temp component to test browser websocket API against
 // our webscoket server
@@ -9,27 +9,27 @@ export default function PlaySession() {
     const [connection, setConnection] = useState<WebSocket | null>(null);
     const [msg, setMsg] = useState<string>("Hello")
     const inputDisplay = useRef<HTMLInputElement | null>(null);
+    const navigate = useNavigate();
     // hard code url for websocket server for now
 
     const [isWaiting, setIsWaiting] = useState<boolean>(true);
 
     useEffect(() => {
+
         const ws = new WebSocket("ws://localhost:5000/websocket");
 
-
         ws.addEventListener("message", (e: MessageEvent<any>) => {
+            console.log(e.data);
             const data = JSON.parse(e.data);
             if (data.dataType) {
                 switch (data.dataType) {
-                    case DataType.CONNECTION: 
-                        console.log(data);
-                        if (data.matchmake_success) {
-                            setIsWaiting(false);
+                    case "CONNECTION":
+                        if (data.matchMakeSuccess) {
                             console.log(isWaiting);
+                            setIsWaiting(false);
                         }
                         break;
-                    
-                    case DataType.MESSAGE:
+                    case "MESSAGE":
                         setMsg(data.content);
                         break;
 
@@ -48,6 +48,9 @@ export default function PlaySession() {
             ws.close();
         });
 
+        ws.addEventListener("error", () => {
+            navigate("*");
+        });
 
         setConnection(ws);
     }, []);
@@ -63,8 +66,8 @@ export default function PlaySession() {
     return (
         <div>
             {isWaiting ?
-                 <WaitingModal/> :
-                 <Session/>
+                <WaitingModal /> :
+                <Session />
             }
         </div>
         // <div className="flex flex-col">
@@ -78,6 +81,6 @@ export default function PlaySession() {
         //         }
         //     }}/>
         // </div>
-        
+
     );
 }

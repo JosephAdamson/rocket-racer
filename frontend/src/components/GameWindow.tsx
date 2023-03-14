@@ -2,6 +2,7 @@ import { useEffect, useState, ChangeEvent, KeyboardEvent, useRef } from "react";
 import { BaseURL } from "../shared";
 import { Snippet } from "../types";
 import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from 'react-router-dom';
 import RocketTrack from "./RocketTrack";
 import rocket_red from "../assets/rocket_red.png";
 import rocket_yellow from "../assets/rocket_yellow.png";
@@ -42,6 +43,7 @@ export default function GameWindow(props: GameWindowProps) {
 
     const [keyStrokes, setKeyStrokes] = useState<number>(0);
     const [errors, setErrors] = useState<number>(0);
+    const navigate = useNavigate();
 
     // temporary
     const players = [
@@ -67,7 +69,7 @@ export default function GameWindow(props: GameWindowProps) {
             const content = await response.json();
             setDisplaySnippet(content.data[0]);
         } catch (error) {
-            console.error(error)
+            navigate("*");
         }
     }
 

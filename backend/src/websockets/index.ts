@@ -1,10 +1,8 @@
 import { Server, IncomingMessage } from 'http'
-//import queryString from "query-string";
 import { getTimeStamp } from '../util/util';
 import internal from 'stream';
 import { WebSocket, WebSocketServer } from 'ws';
 import { v4 as uuidv4 } from 'uuid';
-import { DataType } from '../util/util';
 
 // extending websocket to include id
 declare module "ws" {
@@ -12,6 +10,14 @@ declare module "ws" {
         sessionID: string;
     }
 }
+
+
+interface DataTransfer {
+    dataType: string;
+    matchMakeSuccess?: boolean;
+    content?: string;
+}
+
 
 export default async function setUpWebServer(expressServer: Server) {
 
@@ -37,6 +43,10 @@ export default async function setUpWebServer(expressServer: Server) {
     wss.on("connection", (ws: WebSocket, request: IncomingMessage) => {
         logSessions();
 
+        const dataTransfer: DataTransfer = {
+            dataType: "CONNECTION"
+        } 
+
         // find a joinable session
         if (sessions.size > 0) {
             let sessionID;
@@ -44,38 +54,32 @@ export default async function setUpWebServer(expressServer: Server) {
                 if (clients.length < 2) {
                     sessionID = id;
                     sessions.get(sessionID)!.push(ws);
-                    broadcast(JSON.stringify({
-                        dataType: DataType.CONNECTION,
-                        matchMakeSuccess: true
-                    }), [...clients, ws]);
+                    dataTransfer.matchMakeSuccess = true;
+                    broadcast(JSON.stringify(dataTransfer), [...clients, ws]);
                 }
             }
             if (!sessionID) {
                 sessionID = uuidv4();
                 ws.sessionID;
                 sessions.set(sessionID, [ws]);
-                broadcast(JSON.stringify({
-                    dataType: DataType.CONNECTION,
-                    matchMakeSuccess: false
-                }), [ws]);
+                dataTransfer.matchMakeSuccess = false;
+                broadcast(JSON.stringify(dataTransfer), [ws]);
             }
         } else {
             let sessionID = uuidv4();
             ws.sessionID = sessionID;
             sessions.set(sessionID, [ws]);
             console.log(sessions.size);
-            broadcast(JSON.stringify({
-                dataType: DataType.CONNECTION,
-                matchMakeSuccess: false
-            }), [ws]);
+            dataTransfer.matchMakeSuccess = false;
+            broadcast(JSON.stringify(dataTransfer), [ws]);
         }
         logSessions();
 
 
-        ws.send(JSON.stringify({
-            dataType: DataType.MESSAGE,
-            content: "Welcome..."
-        }));
+        // ws.send(JSON.stringify({
+        //     dataType: "MESSAGE",
+        //     content: "Welcome..."
+        // }));
 
         // every time wss gets data from client
         ws.on("message", (data: Buffer | ArrayBuffer | Buffer[]) => {
@@ -83,10 +87,10 @@ export default async function setUpWebServer(expressServer: Server) {
             //const msg = JSON.parse(data.toString());
             const msg = data.toString();
             console.log(`[from client @ ${timestamp}]: ${msg}`);
-            ws.send(JSON.stringify({
-                dataType: DataType.MESSAGE,
-                content: `Echo: ${msg}`
-            }));
+            // ws.send(JSON.stringify({
+            //     dataType:"MESSAGE",
+            //     content: `Echo: ${msg}`
+            // }));
         });
 
 
@@ -97,7 +101,7 @@ export default async function setUpWebServer(expressServer: Server) {
                     // inform other participant of disconnect
                     for (let other of minusClient) {
                         other.send(JSON.stringify({
-                            dataType: DataType.DISCONNECT,
+                            dataType: "DISCONNECT",
                         }));
                     }
                     sessions.delete(id);

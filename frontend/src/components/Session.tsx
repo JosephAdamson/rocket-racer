@@ -5,7 +5,12 @@ import { Snippet, Results } from '../types';
 import { NavLink } from 'react-router-dom';
 import CountdownModal from './CountdownModal';
 
-export default function Session() {
+
+interface sessionProps {
+    snippet: Snippet;
+}
+
+export default function Session(props: sessionProps) {
     const [results, setResults] = useState<Results | null>();
 
 
@@ -57,7 +62,7 @@ export default function Session() {
                             </button>
                         </div>
                     </> 
-            : <GameWindow timeLimit={120} timeDelay={3} setResultsHandler={setResultHandler} />}
+            : <GameWindow timeLimit={120} timeDelay={3} setResultsHandler={setResultHandler} snippet={props.snippet} />}
         </div>
     )
 }

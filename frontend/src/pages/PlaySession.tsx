@@ -1,36 +1,34 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import WaitingModal from "../components/WaitingModal";
 import Session from "../components/Session";
 import { useNavigate } from "react-router-dom";
+import { Snippet } from "../types";
 
 // This is just a temp component to test browser websocket API against
 // our webscoket server
 export default function PlaySession() {
     const [connection, setConnection] = useState<WebSocket | null>(null);
-    const [msg, setMsg] = useState<string>("Hello")
-    const inputDisplay = useRef<HTMLInputElement | null>(null);
     const navigate = useNavigate();
-    // hard code url for websocket server for now
-
+    const [displaySnippet, setDisplaySnippet] = useState<Snippet | null>(null)
     const [isWaiting, setIsWaiting] = useState<boolean>(true);
 
     useEffect(() => {
-
+         // hard code url for websocket server for now
         const ws = new WebSocket("ws://localhost:5000/websocket");
 
         ws.addEventListener("message", (e: MessageEvent<any>) => {
-            console.log(e.data);
             const data = JSON.parse(e.data);
             if (data.dataType) {
                 switch (data.dataType) {
                     case "CONNECTION":
                         if (data.matchMakeSuccess) {
-                            console.log(isWaiting);
+                            const wrappedSnippet = JSON.parse(data.content);
+                            setDisplaySnippet(wrappedSnippet[0]);
                             setIsWaiting(false);
                         }
                         break;
                     case "MESSAGE":
-                        setMsg(data.content);
+                        console.log("I am a placeholder");
                         break;
 
                     default:
@@ -48,9 +46,11 @@ export default function PlaySession() {
             ws.close();
         });
 
+
         ws.addEventListener("error", () => {
             navigate("*");
         });
+
 
         setConnection(ws);
     }, []);
@@ -60,27 +60,20 @@ export default function PlaySession() {
         return () => {
             connection?.close()
         }
-    }, [connection])
+    }, [connection]);
+
+
+    useEffect(() => {
+        console.log(displaySnippet);
+    }, [displaySnippet])
 
 
     return (
         <div>
-            {isWaiting ?
+            { isWaiting ?
                 <WaitingModal /> :
-                <Session />
+                    displaySnippet && <Session snippet={displaySnippet}/>
             }
         </div>
-        // <div className="flex flex-col">
-        //     <div>{msg}</div>
-        //     <input className="p-1" ref={inputDisplay} type="text"></input>
-        //     <input className="bg-slateBlue p-1 rounded-md text-white my-1" type="submit" onClick={() => {
-        //         const msg: string | undefined = inputDisplay.current?.value;
-        //         if (msg && connection) {
-        //             connection.send(msg);
-        //             inputDisplay!.current!.value = "";
-        //         }
-        //     }}/>
-        // </div>
-
     );
 }

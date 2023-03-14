@@ -3,6 +3,7 @@ import { getTimeStamp } from '../util/util';
 import internal from 'stream';
 import { WebSocket, WebSocketServer } from 'ws';
 import { v4 as uuidv4 } from 'uuid';
+import Snippet from '../models/snippet';
 
 // extending websocket to include id
 declare module "ws" {
@@ -45,7 +46,7 @@ export default async function setUpWebServer(expressServer: Server) {
 
         const dataTransfer: DataTransfer = {
             dataType: "CONNECTION"
-        } 
+        }
 
         // find a joinable session
         if (sessions.size > 0) {
@@ -55,7 +56,8 @@ export default async function setUpWebServer(expressServer: Server) {
                     sessionID = id;
                     sessions.get(sessionID)!.push(ws);
                     dataTransfer.matchMakeSuccess = true;
-                    broadcast(JSON.stringify(dataTransfer), [...clients, ws]);
+                    // call api to get snippet for both users ->
+                    sendSnippet(dataTransfer, [...clients, ws]);
                 }
             }
             if (!sessionID) {
@@ -75,11 +77,6 @@ export default async function setUpWebServer(expressServer: Server) {
         }
         logSessions();
 
-
-        // ws.send(JSON.stringify({
-        //     dataType: "MESSAGE",
-        //     content: "Welcome..."
-        // }));
 
         // every time wss gets data from client
         ws.on("message", (data: Buffer | ArrayBuffer | Buffer[]) => {
@@ -119,6 +116,26 @@ export default async function setUpWebServer(expressServer: Server) {
                 }
             });
         });
+    }
+
+
+    const sendSnippet = async (data: DataTransfer, recipients: WebSocket[]) => {
+       
+        const getSnippetServerSide = async (limit: number) => {
+            try {
+                const result = await Snippet.aggregate([
+                    { $sample: { size: limit } },
+                ]);
+                return result;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        const snippet = await getSnippetServerSide(1)
+        data.content = JSON.stringify(snippet);
+        broadcast(JSON.stringify(data), recipients);
+
     }
 
 

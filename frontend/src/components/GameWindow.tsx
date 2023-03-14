@@ -13,6 +13,7 @@ import rocket_blue from "../assets/rocket_blue.png";
 interface GameWindowProps {
     timeLimit: number;
     timeDelay: number;
+    snippet: Snippet;
     setResultsHandler: (snippet: Snippet, 
             timeRemaining: number, 
             cursor: number, 
@@ -29,7 +30,7 @@ Main interface panel for active game session.
 export default function GameWindow(props: GameWindowProps) {
     const [textDisplay, setTextDisplay] = useState<string[]>([]);
     const [textDisplayHighlight, setTextDisplayHighlight] = useState<number[]>([]);
-    const [displaySnippet, setDisplaySnippet] = useState<Snippet>();
+    const [displaySnippet, setDisplaySnippet] = useState<Snippet>(props.snippet);
     const [cursor, setCursor] = useState<number>(0);
     const [inputField, setInputField] = useState<string>("");
     const inputElement = useRef<HTMLInputElement | null>(null);
@@ -53,25 +54,25 @@ export default function GameWindow(props: GameWindowProps) {
         rocket_black
     ];
 
-    /*
-    Fetch Snippet data from Rocket Racer API
+    // /*
+    // Fetch Snippet data from Rocket Racer API
 
-    @param  {string}    API end point.
-    */
-    const fetchData = async (url: string) => {
-        try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            const content = await response.json();
-            setDisplaySnippet(content.data[0]);
-        } catch (error) {
-            navigate("*");
-        }
-    }
+    // @param  {string}    API end point.
+    // */
+    // const fetchData = async (url: string) => {
+    //     try {
+    //         const response = await fetch(url, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         });
+    //         const content = await response.json();
+    //         setDisplaySnippet(content.data[0]);
+    //     } catch (error) {
+    //         navigate("*");
+    //     }
+    // }
 
 
     /*
@@ -166,9 +167,9 @@ export default function GameWindow(props: GameWindowProps) {
     on initial setup 
     */
     useEffect(() => {
-        const url = `${BaseURL}/api/rand?page=1&limit=1`;
-        fetchData(url);
-
+        // const url = `${BaseURL}/api/rand?page=1&limit=1`;
+        // fetchData(url);
+        console.log(displaySnippet);
         // timer delay
         setTimeout(() => {
             setShowTimer(true);
@@ -183,6 +184,7 @@ export default function GameWindow(props: GameWindowProps) {
     */
     useEffect(() => {
         if (displaySnippet) {
+            console.log(`game window: ${displaySnippet}`);
             //let newDisplayText: string = displaySnippet.text.replaceAll('\n', '. ');
             let newDisplayTextArr: string[] = displaySnippet.text.split(' ');
             let newDisplayText = newDisplayTextArr.join('* *');

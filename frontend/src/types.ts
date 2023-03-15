@@ -24,3 +24,10 @@ export interface LinkItem {
     name: string;
     href: string;
 }
+
+
+export interface DataTransfer {
+    dataType: string;
+    matchMakeSuccess?: boolean;
+    content?: string;
+}

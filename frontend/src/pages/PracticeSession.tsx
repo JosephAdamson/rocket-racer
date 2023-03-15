@@ -25,7 +25,7 @@ export default function PracticeSession() {
     return (
         <>
             { snippetData &&
-                <Session snippet={snippetData}/>
+                <Session snippet={snippetData} isTwoPlayer={false}/>
             }
         </>
     );

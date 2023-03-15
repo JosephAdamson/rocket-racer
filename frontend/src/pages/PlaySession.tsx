@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import WaitingModal from "../components/WaitingModal";
 import Session from "../components/Session";
 import { useNavigate } from "react-router-dom";
-import { Snippet } from "../types";
+import { Snippet, DataTransfer } from "../types";
 
 // This is just a temp component to test browser websocket API against
 // our webscoket server
@@ -11,9 +11,11 @@ export default function PlaySession() {
     const navigate = useNavigate();
     const [displaySnippet, setDisplaySnippet] = useState<Snippet | null>(null)
     const [isWaiting, setIsWaiting] = useState<boolean>(true);
+    const [player2Cursor, setPlayer2Cursor] = useState<number>(0);
+
 
     useEffect(() => {
-         // hard code url for websocket server for now
+        // hard code url for websocket server for now
         const ws = new WebSocket("ws://localhost:5000/websocket");
 
         ws.addEventListener("message", (e: MessageEvent<any>) => {
@@ -28,7 +30,8 @@ export default function PlaySession() {
                         }
                         break;
                     case "MESSAGE":
-                        console.log("I am a placeholder");
+                        console.log(data);
+                        setPlayer2Cursor(parseInt(data.content));
                         break;
 
                     default:
@@ -63,16 +66,29 @@ export default function PlaySession() {
     }, [connection]);
 
 
-    useEffect(() => {
-        console.log(displaySnippet);
-    }, [displaySnippet])
+    /*
+    Broadcast cursor progress via socket connection 
+    */
+    const progressHandler = (cursor: number) => {
+        if (connection) {
+            const data: DataTransfer = {
+                dataType: "MESSAGE",
+                content: `${cursor}`
+            }
+            connection.send(JSON.stringify(data));
+        }
+    }
 
 
     return (
         <div>
-            { isWaiting ?
+            {isWaiting ?
                 <WaitingModal /> :
-                    displaySnippet && <Session snippet={displaySnippet}/>
+                displaySnippet && <Session snippet={displaySnippet}
+                                    isTwoPlayer={true} 
+                                    progressHandler={progressHandler}
+                                    player2Cursor={player2Cursor}
+                                     />
             }
         </div>
     );

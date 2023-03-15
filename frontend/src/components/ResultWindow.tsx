@@ -54,7 +54,8 @@ export default function ResultWindow(props: resultWindowProps) {
     */
     const formatTimeTaken = (baseTime: number, timeRemaining: number) => {
         const dif = baseTime - timeRemaining;
-        return `${Math.floor(dif / 60)}:${dif % 60}`;
+        const seconds = (dif % 60) < 10 ? `0${dif % 60}` : `${dif % 60}`;
+        return `${Math.floor(dif / 60)}:${seconds}`;
     }
 
 

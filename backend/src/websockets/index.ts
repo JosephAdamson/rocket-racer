@@ -5,10 +5,11 @@ import { WebSocket, WebSocketServer } from 'ws';
 import { v4 as uuidv4 } from 'uuid';
 import Snippet from '../models/snippet';
 
-// extending websocket to include id
+// extending websocket to include id and sessionIDx
 declare module "ws" {
     interface WebSocket {
         sessionID: string;
+        playerID: string;
     }
 }
 
@@ -48,30 +49,24 @@ export default async function setUpWebServer(expressServer: Server) {
             dataType: "CONNECTION"
         }
 
+        ws.playerID = uuidv4();
+
         // find a joinable session
         if (sessions.size > 0) {
-            let sessionID;
             for (let [id, clients] of sessions.entries()) {
                 if (clients.length < 2) {
-                    sessionID = id;
-                    sessions.get(sessionID)!.push(ws);
+                    ws.sessionID = id;
+                    sessions.get(id)!.push(ws);
                     dataTransfer.matchMakeSuccess = true;
                     // call api to get snippet for both users ->
                     sendSnippet(dataTransfer, [...clients, ws]);
                 }
             }
-            if (!sessionID) {
-                sessionID = uuidv4();
-                ws.sessionID;
-                sessions.set(sessionID, [ws]);
-                dataTransfer.matchMakeSuccess = false;
-                broadcast(JSON.stringify(dataTransfer), [ws]);
-            }
-        } else {
-            let sessionID = uuidv4();
-            ws.sessionID = sessionID;
-            sessions.set(sessionID, [ws]);
-            console.log(sessions.size);
+        }
+
+        if (!ws.sessionID) {
+            ws.sessionID = uuidv4();
+            sessions.set(ws.sessionID, [ws]);
             dataTransfer.matchMakeSuccess = false;
             broadcast(JSON.stringify(dataTransfer), [ws]);
         }
@@ -81,13 +76,26 @@ export default async function setUpWebServer(expressServer: Server) {
         // every time wss gets data from client
         ws.on("message", (data: Buffer | ArrayBuffer | Buffer[]) => {
             const timestamp = getTimeStamp();
-            //const msg = JSON.parse(data.toString());
-            const msg = data.toString();
-            console.log(`[from client @ ${timestamp}]: ${msg}`);
-            // ws.send(JSON.stringify({
-            //     dataType:"MESSAGE",
-            //     content: `Echo: ${msg}`
-            // }));
+            // temp logging
+            const raw = data.toString();
+            console.log(`[from client @ ${timestamp}]: ${raw}`);
+
+            const dataTransfer: DataTransfer = JSON.parse(raw);
+            switch (dataTransfer.dataType) {
+
+                case "MESSAGE": 
+                    let opponent = 
+                            sessions.get(ws.sessionID)?.filter(player => 
+                                player.playerID !== ws.playerID);
+                    if (opponent) {
+                        broadcast(raw, opponent);
+                    }
+                    
+                    break;
+
+                default: 
+                    console.log(raw);
+            }
         });
 
 
@@ -136,7 +144,7 @@ export default async function setUpWebServer(expressServer: Server) {
         data.content = JSON.stringify(snippet);
         broadcast(JSON.stringify(data), recipients);
 
-    }
+    } 
 
 
     const logSessions = () => {
@@ -146,6 +154,8 @@ export default async function setUpWebServer(expressServer: Server) {
             console.log(`${id}: ${session}`);
         }
     }
+
+
 
     return wss;
 }

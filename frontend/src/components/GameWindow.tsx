@@ -1,27 +1,29 @@
 import { useEffect, useState, ChangeEvent, KeyboardEvent, useRef } from "react";
-import { BaseURL } from "../shared";
 import { Snippet } from "../types";
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import RocketTrack from "./RocketTrack";
 import rocket_red from "../assets/rocket_red.png";
-import rocket_yellow from "../assets/rocket_yellow.png";
-import rocket_black from "../assets/rocket_black.png";
 import rocket_blue from "../assets/rocket_blue.png";
+// import rocket_yellow from "../assets/rocket_yellow.png";
+// import rocket_black from "../assets/rocket_black.png";
 
 
 interface GameWindowProps {
     timeLimit: number;
     timeDelay: number;
     snippet: Snippet;
-    setResultsHandler: (snippet: Snippet, 
-            timeRemaining: number, 
-            cursor: number, 
-            timeLimit: number,
-            keyStrokes: number,
-            errors: number,
-            wordCount: number
-            ) => void
+    isTwoPlayer: boolean;
+    player2Cursor: number;
+    setResultsHandler: (snippet: Snippet,
+        timeRemaining: number,
+        cursor: number,
+        timeLimit: number,
+        keyStrokes: number,
+        errors: number,
+        wordCount: number
+    ) => void;
+    progressHandler?: (cursor: number) => void;
 }
 
 /*
@@ -49,31 +51,10 @@ export default function GameWindow(props: GameWindowProps) {
     // temporary
     const players = [
         rocket_red,
-        rocket_blue,
-        rocket_yellow,
-        rocket_black
+        rocket_blue
+        // rocket_yellow,
+        // rocket_black
     ];
-
-    // /*
-    // Fetch Snippet data from Rocket Racer API
-
-    // @param  {string}    API end point.
-    // */
-    // const fetchData = async (url: string) => {
-    //     try {
-    //         const response = await fetch(url, {
-    //             method: 'GET',
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             }
-    //         });
-    //         const content = await response.json();
-    //         setDisplaySnippet(content.data[0]);
-    //     } catch (error) {
-    //         navigate("*");
-    //     }
-    // }
-
 
     /*
     Compare to string for a match of partial match.
@@ -149,7 +130,6 @@ export default function GameWindow(props: GameWindowProps) {
             const expected = textDisplay[cursor];
             const actual = inputField;
 
-            // check completed
             if (cursor >= textDisplay.length - 1) {
                 setCompleted(true);
             }
@@ -158,18 +138,17 @@ export default function GameWindow(props: GameWindowProps) {
                 setInputField("");
                 // skip space between words
                 setCursor(cursor => cursor + 2);
+                if (props.isTwoPlayer && props.progressHandler) {
+                    props.progressHandler(cursor + 2);
+                }
             }
         }
     }
 
     /*
-    Grab snippet data from API to populate snippet array 
-    on initial setup 
+    Set up initial time delay.
     */
     useEffect(() => {
-        // const url = `${BaseURL}/api/rand?page=1&limit=1`;
-        // fetchData(url);
-        console.log(displaySnippet);
         // timer delay
         setTimeout(() => {
             setShowTimer(true);
@@ -184,7 +163,6 @@ export default function GameWindow(props: GameWindowProps) {
     */
     useEffect(() => {
         if (displaySnippet) {
-            console.log(`game window: ${displaySnippet}`);
             //let newDisplayText: string = displaySnippet.text.replaceAll('\n', '. ');
             let newDisplayTextArr: string[] = displaySnippet.text.split(' ');
             let newDisplayText = newDisplayTextArr.join('* *');
@@ -201,27 +179,27 @@ export default function GameWindow(props: GameWindowProps) {
     Initiate timer 
     */
     useEffect(() => {
-            if (timeLimit === 0 || completed) {
-                if (displaySnippet) {
-                    props.setResultsHandler(
-                        displaySnippet, 
-                        timeLimit, 
-                        cursor, 
-                        props.timeLimit,
-                        keyStrokes,
-                        errors,
-                        textDisplay.length
-                        );
-                }
-                return;
+        if (timeLimit === 0 || completed) {
+            if (displaySnippet) {
+                props.setResultsHandler(
+                    displaySnippet,
+                    timeLimit,
+                    cursor,
+                    props.timeLimit,
+                    keyStrokes,
+                    errors,
+                    textDisplay.length
+                );
             }
-    
-            const timerID = setInterval(() => {
-                setTimeLimit(timeLimit => timeLimit - 1);
-                setMinutes(Math.floor(timeLimit / 60));
-                setSeconds(timeLimit % 60);
-            }, 1000);
-        
+            return;
+        }
+
+        const timerID = setInterval(() => {
+            setTimeLimit(timeLimit => timeLimit - 1);
+            setMinutes(Math.floor(timeLimit / 60));
+            setSeconds(timeLimit % 60);
+        }, 1000);
+
         return () => {
             clearInterval(timerID)
         }
@@ -229,19 +207,26 @@ export default function GameWindow(props: GameWindowProps) {
 
 
     return (
-        <div className="flex flex-col w-full md:w-2/3 h-auto border-2 rounded-md p-4 text-sm md:text-base bg-white"> 
+        <div className="flex flex-col w-full md:w-2/3 h-auto border-2 rounded-md p-4 text-sm md:text-base bg-white">
             <div className="flex justify-between m-2">
                 <h2>3...2...1..LIFT OFF! Type the text below:</h2>
-                { showTimer ? <h1 className={`font-bold ${minutes === 0 && seconds <= 10
+                {showTimer ? <h1 className={`font-bold ${minutes === 0 && seconds <= 10
                     ? "text-red-500" : ""}`
                 }>{minutes}: {seconds < 10 ? 0 + seconds.toString() : seconds}
                 </h1> : ""}
             </div>
             <div className="flex flex-col w-full h-auto p-0 md:p-4">
                 <RocketTrack rocket_img={rocket_blue}
-                    // pass text display / 2 (text without whitespace)
-                    textDisplayArrLength={textDisplay.length / 2}
-                    position={cursor} />
+                            username={"Guest (You)"}
+                            // pass text display / 2 (text without whitespace)
+                            textDisplayArrLength={textDisplay.length / 2}
+                            position={cursor} />
+                {props.isTwoPlayer &&
+                    <RocketTrack rocket_img={rocket_red}
+                        username={"Guest"}
+                        textDisplayArrLength={textDisplay.length / 2}
+                        position={props.player2Cursor} />
+                }
                 <div className="flex flex-col gap-4 p-4 bg-clearBlue/[0.03] 
                 border-2 border-coolGrey rounded-md my-4">
                     <p className="h-auto w-full p-4 font-sourceCode">

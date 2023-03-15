@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 
 
 interface RocketTrackProps {
-    textDisplayArrLength: number
-    position: number
-    rocket_img: string
+    textDisplayArrLength: number;
+    position: number;
+    rocket_img: string;
+    username: string;
 }
 
 
@@ -51,8 +52,11 @@ export default function RocketTrack(props: RocketTrackProps) {
     
 
     return (
-        <div ref={track} className="border-b-2 border-dashed border-dashYellow">
-            <img ref={rocket} className="h-20" style={{transform: progress}} src={props.rocket_img} alt="rocket img" />
+        <div ref={track} className="border-b-2 my-1 border-dashed border-dashYellow">
+            <div ref={rocket} style={{transform: progress}} className="flex flex-col w-fit">
+                <h3 className="font-bold">{props.username}</h3>
+                <img className="h-20" src={props.rocket_img} alt="rocket img" />
+            </div>
         </div>
     )
 }

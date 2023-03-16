@@ -36,4 +36,22 @@ App Styles
 
 .text-shadow {
     text-shadow: black 0px 0px 3px; /* color offset-x offset-y blur-radius */
- }
+}
+
+.caretPulseLeft {
+    animation: caretPulseLeft linear 1s infinite;
+}
+
+.caretPulseRight {
+    animation: caretPulseRight linear 1s infinite;
+}
+
+@keyframes caretPulseLeft {
+    0% { border-left: 1px solid black}
+    100% { border-left: 1px solid white}
+}
+
+@keyframes caretPulseRight {
+    0% { border-right: 1px solid black}
+    100% { border-right: 1px solid white}
+}

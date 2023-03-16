@@ -18,7 +18,7 @@ module.exports = {
         teal: "#4790ae "
       },
       animation: {
-        "fadeIn": "fadeIn 1s ease-in"
+        "fadeIn": "fadeIn 1s ease-in",
       },
       keyframes: {
         fadeIn: {

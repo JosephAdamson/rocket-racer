@@ -18,7 +18,6 @@ export default function PracticeSession() {
 
     useEffect(() => {
         fetchWrap();
-        console.log(snippetData);
     },[]);
 
 

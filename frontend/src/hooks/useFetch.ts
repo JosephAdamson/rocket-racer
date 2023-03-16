@@ -10,8 +10,6 @@ export default function useFetch(url: string, method: string, headers: HeadersIn
 
     const request = async (): Promise<Snippet> => {
         try {
-            console.log(`url: ${url}`);
-            console.log(`method: ${method}`);
             const response = await fetch(url, {
                 method: method,
                 headers: headers,

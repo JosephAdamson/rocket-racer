@@ -46,7 +46,9 @@ export default function RocketTrack(props: RocketTrackProps) {
             const trackPercentage = ((props.position / 2) / wordCount) * 100;
             const offset = halfRocketWidth / 2 + (halfRocketWidth / 100) * trackPercentage;
             const increment: number = (getOffset(trackPercentage) - offset);
-            setProgress(`translateX(${increment}px)`)
+            if (increment > 0) {
+                setProgress(`translateX(${increment}px)`);
+            }
         }
     }, [props]);
     

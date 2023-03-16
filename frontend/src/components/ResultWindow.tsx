@@ -4,6 +4,7 @@ import clock from '../assets/clock.png';
 import keyboard from '../assets/keyboard.png';
 import checkmark from '../assets/checkmark.png';
 import accuracy from '../assets/accuracy.png'
+import ResultRow from "./ResultRow";
 
 
 interface resultWindowProps {
@@ -62,7 +63,6 @@ export default function ResultWindow(props: resultWindowProps) {
     const computeCompleted = (wordCount: number, cursor: number) => {
         const val = cursor > 0 ? cursor - 1 : cursor
         const complete = (val / wordCount) * 100;
-        console.log(complete);
         return complete < 100 ? complete.toFixed(2) : complete;
     }
 
@@ -88,48 +88,18 @@ export default function ResultWindow(props: resultWindowProps) {
                         <h2 className="text-slate-300 text-lg">by {displaySnippet.artist}</h2>
                     </div>
                     <div className="p-6">
-                        <div className="flex items-center">
-                            <img className="w-6 h-6 my-2 bg-white rounded-full p-1" src={keyboard} alt="keyboard" />
-                            <div className="flex justify-between text-white w-full md:w-2/5">
-                                <h3 className="mx-2">Your speed:</h3>
-                                <div className="flex justify-start w-20">
-                                    <h2 className="text-lg md:text-xl text-bold">{wpmDisplay} wpm</h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex items-center">
-                            <img className="w-6 h-6 my-2 bg-white rounded-full p-1" src={clock} alt="clock" />
-                            <div className="flex justify-between text-white w-full md:w-2/5">
-                                <h3 className="text-white mx-2">Time:</h3>
-                                <div className="flex justify-start w-20">
-                                    <h2 className="text-lg md:text-xl">
-                                        {formatTimeTaken(props.results.baseTime, props.results.timeRemaining)}
-                                    </h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex items-center">
-                            <img className="w-6 h-6 my-2 bg-white rounded-full p-1" src={accuracy} alt="clock" />
-                            <div className="flex justify-between text-white w-full md:w-2/5">
-                                <h3 className="text-white mx-2">Accuracy:</h3>
-                                <div className="flex justify-start w-20">
-                                    <h2 className="text-lg md:text-xl">
-                                        {computeAccuracy(props.results.keyStrokes, props.results.errors)}%
-                                    </h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="flex items-center">
-                            <img className="w-6 h-6 my-2 bg-white rounded-full p-1" src={checkmark} alt="clock" />
-                            <div className="flex justify-between text-white w-full md:w-2/5">
-                                <h3 className="text-white mx-2">Complete:</h3>
-                                <div className="flex justify-start w-20">
-                                    <h2 className="text-lg md:text-xl">
-                                        {computeCompleted(props.results.wordCount, props.results.cursor)}%
-                                    </h2>
-                                </div>
-                            </div>
-                        </div>
+                        <ResultRow icon={keyboard} iconText={"Your speed:"}>
+                            <h2 className="text-lg md:text-xl text-bold">{wpmDisplay} wpm</h2>
+                        </ResultRow>
+                        <ResultRow icon={clock} iconText={"Time:"}>
+                            <h2>{formatTimeTaken(props.results.baseTime, props.results.timeRemaining)}</h2>
+                        </ResultRow>
+                        <ResultRow icon={accuracy} iconText={"Accuracy:"}>
+                            <h2>{computeAccuracy(props.results.keyStrokes, props.results.errors)}%</h2>
+                        </ResultRow>
+                        <ResultRow icon={checkmark} iconText={"Complete:"}>
+                            <h2>{computeCompleted(props.results.wordCount, props.results.cursor)}%</h2>
+                        </ResultRow>
                     </div>
                 </div>
             </div>

@@ -13,43 +13,27 @@ interface sessionProps {
     progressHandler?: (cursor: number) => void;
 }
 
+
 export default function Session(props: sessionProps) {
     const [results, setResults] = useState<Results | null>();
 
 
     /*
     Set results of Practice session once Game Window has expired.
-    
-    @param  {Snippet}       snippet         Object containing song data (text, img etc.)
-    @param  {number}        timeRemaining   Remaining minutes/seconds from a completed session.
-    @param  {number}        baseTime        Time alloted for a single session.
-    @param  {number}        keystrokes      Total keystrokes for a single session.
-    @param  {number}        errors          Total errors for a  single session.  
+
+    @param: {Results | null}   results Value to be set at a session's conclusion/start
     */
-    const setResultHandler = (
-        snippet: Snippet,
-        timeRemaining: number,
-        cursor: number,
-        baseTime: number,
-        keyStrokes: number,
-        errors: number,
-        wordCount: number
-    ) => {
-        setResults({
-            snippet: snippet,
-            timeRemaining: timeRemaining,
-            cursor: cursor,
-            baseTime: baseTime,
-            keyStrokes: keyStrokes,
-            errors: errors,
-            wordCount: wordCount
-        });
+    const setResultHandler = (results : Results | null) => {
+        if (results) {
+            setResults(results);
+        } else {
+            setResults(null);
+        }
     }
 
 
     return (
         <div className="flex flex-col justify-center items-center">
-            <CountdownModal />
             {results ? <>
                 <ResultWindow results={results} />
                 <div className="flex bg-slateBlue w-full border-t-[1px] border-slate-300 md:border-none
@@ -65,7 +49,9 @@ export default function Session(props: sessionProps) {
                     </button>
                 </div>
             </>
-                : <GameWindow timeLimit={120}
+                : <>
+                <CountdownModal/>
+                <GameWindow timeLimit={120}
                     timeDelay={3}
                     setResultsHandler={setResultHandler}
                     snippet={props.snippet} 
@@ -74,6 +60,7 @@ export default function Session(props: sessionProps) {
                     progressHandler={props.progressHandler}
                     player2Cursor={props.player2Cursor ? props.player2Cursor : 0}
                     />
+                </>
             }
         </div>
     )

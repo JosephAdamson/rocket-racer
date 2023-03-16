@@ -1,12 +1,10 @@
 import { useEffect, useState, ChangeEvent, KeyboardEvent, useRef } from "react";
-import { Snippet } from "../types";
+import { Snippet, Results } from "../types";
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import RocketTrack from "./RocketTrack";
 import rocket_red from "../assets/rocket_red.png";
 import rocket_blue from "../assets/rocket_blue.png";
-// import rocket_yellow from "../assets/rocket_yellow.png";
-// import rocket_black from "../assets/rocket_black.png";
 
 
 interface GameWindowProps {
@@ -15,14 +13,7 @@ interface GameWindowProps {
     snippet: Snippet;
     isTwoPlayer: boolean;
     player2Cursor: number;
-    setResultsHandler: (snippet: Snippet,
-        timeRemaining: number,
-        cursor: number,
-        timeLimit: number,
-        keyStrokes: number,
-        errors: number,
-        wordCount: number
-    ) => void;
+    setResultsHandler: (results: Results | null) => void;
     progressHandler?: (cursor: number) => void;
 }
 
@@ -48,14 +39,6 @@ export default function GameWindow(props: GameWindowProps) {
     const [errors, setErrors] = useState<number>(0);
     const navigate = useNavigate();
 
-    // temporary
-    const players = [
-        rocket_red,
-        rocket_blue
-        // rocket_yellow,
-        // rocket_black
-    ];
-
     /*
     Compare to string for a match of partial match.
 
@@ -66,30 +49,38 @@ export default function GameWindow(props: GameWindowProps) {
         if (!current || !actual) {
             return false;
         }
-        return actual === current ||
-            actual.startsWith(current);
+        return actual === current || actual.startsWith(current);
     }
 
 
     /*
     Wrap each letter of a word in a span
     
-    @param {string}     word    string to be wrapped
+    @param  {string}    word    String to be wrapped.
+    @param  {number}    pos     Position a given word in the text.
     */
     const spanify = (word: string, pos: number) => {
         const wordArr = word.split('');
 
         return wordArr.map((letter, i) => {
+            // The sublength of the word the user has typed out.
             const subLen = textDisplayHighlight[cursor];
+            // checking for already completed words.
+            let cssClass = ``;
             if (cursor >= pos) {
-                return <span className={
+                const highlight = 
                     (textDisplayHighlight[cursor] > 0 && i < subLen) || cursor > pos ?
-                        `text-highlightGreen` :
-                        'bg-red-200'
-                } key={uuidv4()}>{letter}</span>
-            } else {
-                return <span key={uuidv4()}>{letter}</span>
+                         `text-highlightGreen` : `bg-red-200`;
+                cssClass = cssClass.concat(highlight);
+                if (inputElement?.current?.value === word && pos === cursor
+                    && i === subLen - 1) {
+                    cssClass = cssClass.concat(" caretPulseRight");
+                }
+                if (cursor === pos && i === textDisplayHighlight[cursor]) {
+                    cssClass = cssClass.concat(" caretPulseLeft");
+                }
             }
+            return <span className={cssClass} key={uuidv4()}>{letter}</span>
         });
     }
 
@@ -163,7 +154,6 @@ export default function GameWindow(props: GameWindowProps) {
     */
     useEffect(() => {
         if (displaySnippet) {
-            //let newDisplayText: string = displaySnippet.text.replaceAll('\n', '. ');
             let newDisplayTextArr: string[] = displaySnippet.text.split(' ');
             let newDisplayText = newDisplayTextArr.join('* *');
             newDisplayTextArr = newDisplayText.split('*');
@@ -181,15 +171,16 @@ export default function GameWindow(props: GameWindowProps) {
     useEffect(() => {
         if (timeLimit === 0 || completed) {
             if (displaySnippet) {
-                props.setResultsHandler(
-                    displaySnippet,
-                    timeLimit,
-                    cursor,
-                    props.timeLimit,
-                    keyStrokes,
-                    errors,
-                    textDisplay.length
-                );
+                const results: Results = {
+                    snippet: props.snippet,
+                    timeRemaining: timeLimit,                  
+                    baseTime: props.timeLimit,
+                    cursor: cursor,
+                    keyStrokes: keyStrokes,
+                    errors: errors,
+                    wordCount: textDisplay.length
+                }
+                props.setResultsHandler(results);
             }
             return;
         }
@@ -209,8 +200,8 @@ export default function GameWindow(props: GameWindowProps) {
     return (
         <div className="flex flex-col w-full md:w-2/3 h-auto border-2 rounded-md p-4 text-sm md:text-base bg-white">
             <div className="flex justify-between m-2">
-                <h2 className="font-bold">3...2...1..LIFT OFF! Type the text below:</h2>
-                {showTimer ? <h1 className={`font-bold text-2xl ${minutes === 0 && seconds <= 10
+                <h2 className="font-bold text-xs md:text-base">3...2...1..LIFT OFF! Type the text below:</h2>
+                {showTimer ? <h1 className={`font-bold md:text-2xl ${minutes === 0 && seconds <= 10
                     ? "text-red-500" : ""}`
                 }>{minutes}: {seconds < 10 ? 0 + seconds.toString() : seconds}
                 </h1> : ""}
@@ -223,7 +214,7 @@ export default function GameWindow(props: GameWindowProps) {
                             position={cursor} />
                 {props.isTwoPlayer &&
                     <RocketTrack rocket_img={rocket_red}
-                        username={"Guest"}
+                        username={props.player2Cursor >= textDisplay.length - 1 ? "Winner!" : "Guest"}
                         textDisplayArrLength={textDisplay.length / 2}
                         position={props.player2Cursor} />
                 }

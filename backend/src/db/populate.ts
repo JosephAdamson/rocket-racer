@@ -24,5 +24,4 @@ const populate = async () => {
         process.exit(1);
     }
 }
-
 populate();

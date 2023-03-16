@@ -209,8 +209,8 @@ export default function GameWindow(props: GameWindowProps) {
     return (
         <div className="flex flex-col w-full md:w-2/3 h-auto border-2 rounded-md p-4 text-sm md:text-base bg-white">
             <div className="flex justify-between m-2">
-                <h2>3...2...1..LIFT OFF! Type the text below:</h2>
-                {showTimer ? <h1 className={`font-bold ${minutes === 0 && seconds <= 10
+                <h2 className="font-bold">3...2...1..LIFT OFF! Type the text below:</h2>
+                {showTimer ? <h1 className={`font-bold text-2xl ${minutes === 0 && seconds <= 10
                     ? "text-red-500" : ""}`
                 }>{minutes}: {seconds < 10 ? 0 + seconds.toString() : seconds}
                 </h1> : ""}

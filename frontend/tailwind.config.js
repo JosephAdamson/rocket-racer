@@ -14,7 +14,8 @@ module.exports = {
         coolGreen: "#4caf50",
         sparkOrange: "#ff7c1d",
         softGreen: "#4caf50",
-        mellowOrange: "#ffb21b"
+        mellowOrange: "#ffb21b",
+        teal: "#4790ae "
       },
       animation: {
         "fadeIn": "fadeIn 1s ease-in"

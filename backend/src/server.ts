@@ -12,7 +12,7 @@ const PORT = env.PORT || 5000;
 const start = async () => {
     try {
         await connectDB(env.MONGO_URI);
-        const httpServer = app.listen(PORT, () => {
+        const httpServer = app.listen(PORT, "0.0.0.0", () => {
             console.log(`Express server listening on port ${PORT}`);
         });
         const wss = setUpWebServer(httpServer);

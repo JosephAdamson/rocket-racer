@@ -8,12 +8,13 @@ import Snippet from '../models/snippet';
 Reset and populate DB 
 */
 const populate = async () => {
+    let snippets;
     try {
         await connectDB(env.MONGO_URI);
-        await Snippet.deleteMany();
-
-        for (let artist in songData) {
-            const snippets = songData[artist as keyof typeof songData];
+        await Snippet.deleteMany({});
+        for (let [artist, songs] of Object.entries(songData)) {
+            console.log(artist);
+            snippets = songs;
             await Snippet.create(snippets);
         }
         console.log("DB successfully re-populated");

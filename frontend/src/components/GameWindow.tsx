@@ -66,11 +66,12 @@ export default function GameWindow(props: GameWindowProps) {
             // The sublength of the word the user has typed out.
             const subLen = textDisplayHighlight[cursor];
             // checking for already completed words.
-            let cssClass = ``;
+            let cssClass = `border-[1px] border-[#f9fcfe] `;
             if (cursor >= pos) {
                 const highlight = 
                     (textDisplayHighlight[cursor] > 0 && i < subLen) || cursor > pos ?
-                         `text-highlightGreen` : `bg-red-200`;
+                         `text-highlightGreen border-[#f9fcfe]` 
+                         : `bg-red-200 border-red-200`;
                 cssClass = cssClass.concat(highlight);
                 if (inputElement?.current?.value === word && pos === cursor
                     && i === subLen - 1) {
@@ -214,7 +215,7 @@ export default function GameWindow(props: GameWindowProps) {
                             position={cursor} />
                 {props.isTwoPlayer &&
                     <RocketTrack rocket_img={rocket_red}
-                        username={props.player2Cursor >= textDisplay.length - 1 ? "Winner!" : "Guest"}
+                        username={props.player2Cursor >= textDisplay.length ? "Winner!" : "Guest"}
                         textDisplayArrLength={textDisplay.length / 2}
                         position={props.player2Cursor} />
                 }

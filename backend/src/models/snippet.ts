@@ -1,6 +1,14 @@
 import { Schema, model, InferSchemaType } from "mongoose";
 
-const snippetSchema = new Schema({
+interface Snippet {
+    artist: string;
+    title: string;
+    content_seq: number;
+    text: string;
+    img: string;
+}
+
+const snippetSchema = new Schema<Snippet>({
     artist: {
         type: String,
         required: true
@@ -23,6 +31,6 @@ const snippetSchema = new Schema({
     }
 });
 
-type Snippet = InferSchemaType<typeof snippetSchema>
+//type Snippet = InferSchemaType<typeof snippetSchema>
 
-export default model('Snippet', snippetSchema);
+export default model<Snippet>('Snippet', snippetSchema);

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import GameWindow from "./GameWindow";
 import ResultWindow from './ResultWindow';
 import { Snippet, Results } from '../types';
@@ -16,6 +16,8 @@ interface sessionProps {
 
 export default function Session(props: sessionProps) {
     const [results, setResults] = useState<Results | null>();
+    // store isTwoplayer in state so we can change from play mode to practice mode
+    const [isTwoPlayer, setIsTwoPlayer] = useState<boolean>(false);
 
 
     /*
@@ -23,13 +25,18 @@ export default function Session(props: sessionProps) {
 
     @param: {Results | null}   results Value to be set at a session's conclusion/start
     */
-    const setResultHandler = (results : Results | null) => {
+    const setResultHandler = (results: Results | null) => {
         if (results) {
             setResults(results);
         } else {
             setResults(null);
         }
     }
+
+
+    useEffect(() => {
+        setIsTwoPlayer(props.isTwoPlayer);
+    }, []);
 
 
     return (
@@ -42,23 +49,28 @@ export default function Session(props: sessionProps) {
                              hover:brightness-[0.85]"
                         onClick={() => {
                             setResults(null);
-                        }}>Try again</button>
+                        }}> {isTwoPlayer 
+                                ? <NavLink to={"/practice"}
+                                    state={{snippet: props.snippet}}>Try again</NavLink> 
+                                : "Try again"
+                            }
+                            </button>
                     <button className="bg-mellowOrange font-bold text-white rounded-md 
                             p-4 hover:brightness-[0.85]">
-                        <NavLink to={"/"}>Home (leave practice)</NavLink>
+                         <NavLink to={"/"}>Home</NavLink>
                     </button>
                 </div>
             </>
                 : <>
-                <CountdownModal/>
-                <GameWindow timeLimit={120}
-                    timeDelay={3}
-                    setResultsHandler={setResultHandler}
-                    snippet={props.snippet} 
-                    isTwoPlayer={props.isTwoPlayer}
-                    // should only pass if progress handler is NOT null
-                    progressHandler={props.progressHandler}
-                    player2Cursor={props.player2Cursor ? props.player2Cursor : 0}
+                    <CountdownModal />
+                    <GameWindow timeLimit={120}
+                        timeDelay={3}
+                        setResultsHandler={setResultHandler}
+                        snippet={props.snippet}
+                        isTwoPlayer={isTwoPlayer}
+                        // should only pass if progress handler is NOT null
+                        progressHandler={props.progressHandler}
+                        player2Cursor={props.player2Cursor ? props.player2Cursor : 0}
                     />
                 </>
             }

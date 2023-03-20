@@ -1,5 +1,18 @@
+import { cleanEnv, str, port } from 'envalid';
 
 
-export default function concatClasses(...classes: string[]){
+const concatClasses = (...classes: string[]) => {
     return classes.join(" ");
+}
+
+
+const env = cleanEnv(process.env, {
+    REACT_APP_BASE_URL: str(),
+    REACT_APP_WSS_ADDR: str()
+})
+
+
+export {
+    concatClasses,
+    env
 }

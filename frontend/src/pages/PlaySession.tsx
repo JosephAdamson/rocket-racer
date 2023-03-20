@@ -3,6 +3,7 @@ import WaitingModal from "../components/WaitingModal";
 import Session from "../components/Session";
 import { useNavigate } from "react-router-dom";
 import { Snippet, DataTransfer } from "../types";
+import { env } from "../util"
 
 // This is just a temp component to test browser websocket API against
 // our webscoket server
@@ -16,7 +17,7 @@ export default function PlaySession() {
 
     useEffect(() => {
         // hard code url for websocket server for now
-        const ws = new WebSocket("ws://localhost:5000/websocket");
+        const ws = new WebSocket(env.REACT_APP_WSS_ADDR);
 
         ws.addEventListener("message", (e: MessageEvent<any>) => {
             const data = JSON.parse(e.data);

@@ -118,7 +118,7 @@ export default function GameWindow(props: GameWindowProps) {
     @param  {KeybooardEvent}   e   User keystroke.  
     */
     const keyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === " " || e.code === "Space") {
+        if (e.keyCode === 32 || e.key === " " || e.code === "Space") {
             const expected = textDisplay[cursor];
             const actual = inputField;
 

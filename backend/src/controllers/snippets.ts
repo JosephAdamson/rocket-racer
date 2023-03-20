@@ -35,11 +35,11 @@ const getSnippets = async (req: Request, res: Response, next: NextFunction) => {
         const query: queryObj = {};
 
         if (artist && typeof artist === 'string') {
-            query.artist = artist.toLowerCase();
+            query.artist = artist;
         }
 
         if (title && typeof title === 'string') {
-            query.title = title.toLowerCase();
+            query.title = title;
         }
 
         let result;
@@ -99,7 +99,7 @@ const deleteSnippets = async (req: Request, res: Response, next: NextFunction) =
         const query: queryObj = {}
 
         if (artist && typeof artist === 'string') {
-            query.artist = artist.toLowerCase();
+            query.artist = artist;
         }
         console.log(query);
 

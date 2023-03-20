@@ -7,7 +7,8 @@ import cors, { CorsOptions } from 'cors';
 const app = express();
 
 // for now just the 2 ports and local ip we are using for React
-const whiteList: string[] = ["http://localhost:3000", "http://localhost:3001", "http://192.168.0.12:3000"];
+const whiteList: string[] = ["http://localhost:3000", "http://localhost:3001", "http://192.168.0.12:3000",
+ "rocket-racer-production.up.railway.app"];
 const options: CorsOptions = {
     origin: whiteList
 }

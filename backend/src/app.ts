@@ -7,7 +7,7 @@ import cors, { CorsOptions } from 'cors';
 const app = express();
 
 const whiteList: string[] = ["http://localhost:3000", "http://localhost:3001", "http://192.168.0.12:3000",
- "https://rocket-racer-production.up.railway.app"];
+ "https://rocket-racer-production-9242.up.railway.app/"];
 const options: CorsOptions = {
     origin: whiteList
 }

@@ -8,6 +8,8 @@ Try it [here](https://rocket-racer-production-9242.up.railway.app/).
 ```
 - Express
 - React
+- REST API
+- Websockets
 - Tailwindcss
 - Railway
 ```

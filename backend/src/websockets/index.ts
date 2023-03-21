@@ -90,7 +90,10 @@ export default async function setUpWebServer(expressServer: Server) {
                     if (opponent) {
                         broadcast(raw, opponent);
                     }
-                    
+                    break;
+
+                case "DISCONNECT":
+                    console.log("player has left the game");
                     break;
 
                 default: 
@@ -100,10 +103,12 @@ export default async function setUpWebServer(expressServer: Server) {
 
 
         ws.on('close', () => {
+            console.log(`client ${ws.playerID} closed their connection`);
             for (let [id, clients] of sessions.entries()) {
                 if (id === ws.sessionID) {
-                    const minusClient = clients.filter(client => client.sessionID !== id);
+                    const minusClient = clients.filter(client => client.playerID !== id);
                     // inform other participant of disconnect
+                    console.log(minusClient);
                     for (let other of minusClient) {
                         other.send(JSON.stringify({
                             dataType: "DISCONNECT",

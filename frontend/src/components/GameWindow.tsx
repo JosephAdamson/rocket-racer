@@ -122,7 +122,7 @@ export default function GameWindow(props: GameWindowProps) {
             const expected = textDisplay[cursor];
             const actual = inputField;
 
-            if (cursor >= textDisplay.length - 1) {
+            if (cursor >= textDisplay.length - 1 && isWordMatch(expected, actual) ) {
                 setCompleted(true);
             }
 

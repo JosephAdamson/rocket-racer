@@ -7,6 +7,7 @@ type ResultRowProps = PropsWithChildren<{
     iconText: string;
 }>;
 
+
 export default function ResultRow(props: ResultRowProps) {
     return (
         <div className="flex items-center">

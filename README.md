@@ -8,7 +8,7 @@ Fullstack typeracer-like application. The premise is simple; the player types ou
 ```
 - Express
 - React
-- REST API
+- ReST API
 - Websockets
 - Tailwindcss
 - Railway

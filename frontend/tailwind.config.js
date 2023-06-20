@@ -15,6 +15,7 @@ module.exports = {
         sparkOrange: "#ff7c1d",
         softGreen: "#4caf50",
         mellowOrange: "#ffb21b",
+        rocketRed: "#e23526",
         teal: "#4790ae "
       },
       animation: {

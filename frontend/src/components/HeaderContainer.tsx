@@ -9,11 +9,11 @@ type headerContainerProps = PropsWithChildren<{
 
 export default function HeaderContainer(props: headerContainerProps) {
    return (
-        <div className="h-screen">
+        <div className="min-h-full max-h-fit">
             <div>
                 <Navbar/>
             </div>
-            <div className=" h-full p-4 liftoff">
+            <div className="min-h-screen max-h-fit p-4 liftoff">
                 {props.children}
             </div>
         </div>

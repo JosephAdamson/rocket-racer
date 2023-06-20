@@ -32,6 +32,7 @@ App Styles
 .liftoff {
     background-image: url("../assets/liftoff.jpg");
     background-size: cover;
+    background-repeat: repeat-y;
 }
 
 .text-shadow {

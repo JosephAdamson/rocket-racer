@@ -36,7 +36,7 @@ export default function Session(props: sessionProps) {
 
     useEffect(() => {
         setIsTwoPlayer(props.isTwoPlayer);
-    }, []);
+    }, [results]);
 
 
     return (
@@ -45,19 +45,28 @@ export default function Session(props: sessionProps) {
                 <ResultWindow results={results} />
                 <div className="flex bg-slateBlue w-full border-t-[1px] border-slate-300 md:border-none
                         border md:w-2/3 p-4 rounded-b-md justify-between">
-                    <button className="bg-softGreen font-bold text-white rounded-md p-4
+                    <div className="flex gap-2 w-fit">
+                        <button className="bg-softGreen font-bold text-white rounded-md p-4
                              hover:brightness-[0.85]"
-                        onClick={() => {
-                            setResults(null);
-                        }}> {isTwoPlayer 
+                            onClick={() => {
+                                setResults(null);
+                            }}> {isTwoPlayer
                                 ? <NavLink to={"/practice"}
-                                    state={{snippet: props.snippet}}>Try again</NavLink> 
+                                    state={{ snippet: props.snippet }}>Try again</NavLink>
                                 : "Try again"
                             }
-                            </button>
+                        </button>
+                        <button className="bg-rocketRed font-bold text-white rounded-md 
+                            p-4 hover:brightness-[0.85]"
+                            onClick={() => {
+                                window.location.reload();
+                            }}> 
+                            <NavLink to={"/practice"}>Another one</NavLink>
+                        </button>
+                    </div>
                     <button className="bg-mellowOrange font-bold text-white rounded-md 
                             p-4 hover:brightness-[0.85]">
-                         <NavLink to={"/"}>Home</NavLink>
+                        <NavLink to={"/"}>Home</NavLink>
                     </button>
                 </div>
             </>

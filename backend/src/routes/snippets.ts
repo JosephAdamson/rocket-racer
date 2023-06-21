@@ -6,6 +6,6 @@ const router = express.Router();
 router.get('/static/', getSnippetsStatic);
 router.get('/rand/', getSnippetsRandom);
 router.get('/', getSnippets);
-//router.delete('/', deleteSnippets);
+router.delete('/', deleteSnippets);
 
 export default router;
